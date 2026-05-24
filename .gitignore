@@ -1,0 +1,22 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+
+# PyInstaller
+app/build/
+app/dist/
+app/*.spec
+*.dmg
+*.exe
+
+# macOS
+.DS_Store
+
+# Editor
+.vscode/
+.idea/
