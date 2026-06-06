@@ -74,7 +74,7 @@ jobs:
             --windowed `
             --onefile `
             --name "TheSongIs-win" `
-            --icon static/icon.ico `
+            --icon static/favicon.ico `
             --add-data "templates;templates" `
             --add-data "static;static" `
             app.py
