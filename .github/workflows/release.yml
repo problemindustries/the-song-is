@@ -70,18 +70,6 @@ jobs:
         run: |
           cd app
 
-          pip install cairosvg pillow
-          python -c "
-          import cairosvg, io
-          from PIL import Image
-          sizes = [16, 32, 48, 64, 128, 256]
-          imgs = []
-          for s in sizes:
-              png = cairosvg.svg2png(url='static/favicon.svg', output_width=s, output_height=s)
-              imgs.append(Image.open(io.BytesIO(png)).convert('RGBA'))
-          imgs[0].save('static/icon.ico', format='ICO', append_images=imgs[1:], sizes=[(s,s) for s in sizes])
-          "
-
           pyinstaller `
             --windowed `
             --onefile `
