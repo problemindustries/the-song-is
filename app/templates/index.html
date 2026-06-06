@@ -1,0 +1,1680 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <title>The Song Is</title>
+  <style>
+    /* ── Theme tokens ─────────────────────────────────────── */
+    :root {
+      --bg:              #f4f1ea;
+      --bg-header:       #faf8f3;
+      --bg-card:         #faf8f3;
+      --bg-modal:        #faf8f3;
+      --bg-input:        transparent;
+      --bg-input-deep:   transparent;
+      --bg-flp-row:      #f4f1ea;
+      --bg-close-btn:    #ece8de;
+
+      --border:          #d6d0c4;
+      --border-card:     #d6d0c4;
+      --border-card-hover: #a8a296;
+      --border-input:    #c8c2b4;
+      --border-modal:    #d6d0c4;
+      --border-flp-row:  #d6d0c4;
+      --border-reset:    #c8c2b4;
+
+      --text:            #2c2820;
+      --text-dim:        #9a9288;
+      --text-card-title: #2c2820;
+      --text-card-date:  #a8a298;
+      --text-card-notes: #6e6860;
+      --text-modal-title:#1c1810;
+      --text-input:      #2c2820;
+      --text-flp:        #3c3830;
+      --text-reset:      #9a9288;
+      --text-label:      #b0aa9e;
+
+      --star-off:        #d6d0c4;
+      --canvas-dot:      #ccc8bc;
+      --shadow-card:     rgba(44,36,24,0.07);
+      --shadow-drag:     rgba(44,36,24,0.16);
+      --modal-overlay:   rgba(44,36,24,0.35);
+
+      --toast-bg:        #faf8f3;
+      --toast-border:    #d6d0c4;
+      --toast-text:      #2c2820;
+
+      --open-disabled-bg:    #e8e4da;
+      --open-disabled-color: #b0aa9e;
+
+      --accent:          #6b8f71;
+      --accent-hover:    #5a7d60;
+
+      --font-mono: ui-monospace, 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    }
+
+    [data-theme="dark"] {
+      --bg:              #1c1a15;
+      --bg-header:       #222018;
+      --bg-card:         #252219;
+      --bg-modal:        #252219;
+      --bg-input:        transparent;
+      --bg-input-deep:   transparent;
+      --bg-flp-row:      #1c1a15;
+      --bg-close-btn:    #2e2b20;
+
+      --border:          #373320;
+      --border-card:     #373320;
+      --border-card-hover: #504c38;
+      --border-input:    #3e3a28;
+      --border-modal:    #373320;
+      --border-flp-row:  #373320;
+      --border-reset:    #3e3a28;
+
+      --text:            #d8d3c8;
+      --text-dim:        #685e50;
+      --text-card-title: #d8d3c8;
+      --text-card-date:  #5a5648;
+      --text-card-notes: #7a7468;
+      --text-modal-title:#e4dfd4;
+      --text-input:      #d8d3c8;
+      --text-flp:        #b8b2a8;
+      --text-reset:      #685e50;
+      --text-label:      #4e4a38;
+
+      --star-off:        #373320;
+      --canvas-dot:      #2a2820;
+      --shadow-card:     rgba(0,0,0,0.4);
+      --shadow-drag:     rgba(0,0,0,0.6);
+      --modal-overlay:   rgba(0,0,0,0.6);
+
+      --toast-bg:        #252219;
+      --toast-border:    #373320;
+      --toast-text:      #d8d3c8;
+
+      --open-disabled-bg:    #2e2b20;
+      --open-disabled-color: #4e4a38;
+
+      --accent:          #7a9e80;
+      --accent-hover:    #6a8e70;
+    }
+
+    /* ── Reset ────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      overflow: hidden;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    /* ── Header ───────────────────────────────────────────── */
+    #header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 64px;
+      background: var(--bg-header);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      gap: 10px;
+      z-index: 200;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    #header h1 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.2px;
+      white-space: nowrap;
+      margin-right: 4px;
+    }
+
+    #search {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--border-input);
+      border-radius: 0;
+      color: var(--text);
+      padding: 6px 24px 6px 4px;
+      font-size: 13px;
+      width: 200px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    #search::placeholder { color: var(--text-dim); }
+    #search:focus { border-color: var(--accent); }
+
+    #app-logo {
+      height: 36px;
+      width: auto;
+      flex-shrink: 0;
+    }
+
+    #project-count {
+      font-size: 12px;
+      font-family: var(--font-mono);
+      color: var(--text-dim);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    #search-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    #search-clear {
+      position: absolute;
+      right: 2px;
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      font-size: 16px;
+      line-height: 1;
+      padding: 2px 5px;
+      cursor: pointer;
+      display: none;
+      transition: color 0.15s;
+    }
+    #search-clear:hover { color: var(--text); }
+
+    .hdr-btn {
+      background: none;
+      border: 1px solid var(--border-reset);
+      border-radius: 6px;
+      color: var(--text-reset);
+      font-size: 12px;
+      padding: 5px 10px;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+      white-space: nowrap;
+      height: 30px;
+      display: flex; align-items: center; gap: 5px;
+    }
+    .hdr-btn:hover { color: var(--text); border-color: var(--text-dim); }
+    .hdr-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    #theme-btn {
+      background: none;
+      border: 1px solid var(--border-reset);
+      border-radius: 6px;
+      color: var(--text-reset);
+      font-size: 15px;
+      width: 32px; height: 30px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s;
+      flex-shrink: 0;
+      margin-left: auto;
+    }
+    #theme-btn:hover { color: var(--text); border-color: var(--text-dim); }
+
+    /* ── About modal ──────────────────────────────────────────── */
+    #about-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: var(--modal-overlay);
+      backdrop-filter: blur(6px);
+      z-index: 500;
+      align-items: center; justify-content: center;
+    }
+    #about-overlay.open { display: flex; }
+
+    #about-modal {
+      background: var(--bg-modal);
+      border: 1px solid var(--border-modal);
+      border-radius: 14px;
+      width: 620px;
+      padding: 36px 36px 32px;
+      position: relative;
+      animation: popIn 0.18s ease;
+      text-align: center;
+    }
+
+    #about-modal img {
+      width: 55%;
+      max-width: 320px;
+      height: auto;
+      margin-bottom: 10px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    #about-by {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-bottom: 18px;
+    }
+    #about-by a {
+      color: var(--text-dim);
+      text-decoration: none;
+    }
+    #about-by a:hover { text-decoration: underline; }
+
+    #about-content {
+      font-size: 13px;
+      color: var(--text-dim);
+      line-height: 1.65;
+      margin-top: 14px;
+    }
+
+    #about-content a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    #about-content a:hover { text-decoration: underline; }
+
+    #about-close {
+      position: absolute; top: 14px; right: 14px;
+      background: var(--bg-close-btn); border: none;
+      color: var(--text-dim); font-size: 16px;
+      width: 28px; height: 28px; border-radius: 50%;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s, color 0.15s;
+    }
+    #about-close:hover { background: var(--border-input); color: var(--text); }
+
+    /* ── Canvas ───────────────────────────────────────────── */
+    #canvas-wrap {
+      position: fixed;
+      top: 64px; left: 0; right: 0; bottom: 0;
+      overflow: scroll;
+      background: var(--bg);
+      background-image: radial-gradient(var(--canvas-dot) 1px, transparent 1px);
+      background-size: 28px 28px;
+      transition: background-color 0.2s;
+    }
+
+    #canvas-wrap::-webkit-scrollbar { width: 8px; height: 8px; }
+    #canvas-wrap::-webkit-scrollbar-track { background: transparent; }
+    #canvas-wrap::-webkit-scrollbar-thumb {
+      background: var(--border-card-hover);
+      border-radius: 4px;
+      border: 2px solid var(--bg);
+    }
+    #canvas-wrap::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+    #canvas-wrap::-webkit-scrollbar-corner { background: var(--bg); }
+
+    #canvas {
+      position: relative;
+      min-width: 100%;
+      min-height: 100%;
+    }
+
+    /* ── Project Cards ────────────────────────────────────── */
+    .card {
+      position: absolute;
+      width: 188px;
+      background: var(--bg-card);
+      border-radius: 8px;
+      border: 1px solid var(--border-card);
+      box-shadow: 0 1px 4px var(--shadow-card);
+      cursor: pointer;
+      user-select: none;
+      transition: box-shadow 0.15s, border-color 0.15s, background 0.2s, opacity 0.2s;
+      overflow: hidden;
+    }
+    .card:hover {
+      border-color: var(--border-card-hover);
+      box-shadow: 0 4px 16px var(--shadow-card);
+    }
+    .card.dragging {
+      box-shadow: 0 12px 48px var(--shadow-drag);
+      z-index: 1000 !important;
+      opacity: 0.92;
+      cursor: grabbing;
+    }
+    .card.filtered-out { display: none; }
+    .card.is-hidden {
+      opacity: 0.35;
+    }
+    .card.is-hidden .card-title::after {
+      content: ' · hidden';
+      font-size: 10px;
+      font-weight: 400;
+      color: var(--text-dim);
+    }
+
+    .card-stripe { height: 5px; }
+    .card-body { padding: 10px 12px 12px; }
+
+    .card-title {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-card-title);
+      margin-bottom: 7px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.3;
+    }
+    .card-stars { margin-bottom: 5px; }
+
+    .star { font-size: 11px; color: var(--star-off); }
+    .star.on { color: #ffc107; }
+    .star.interactive { cursor: pointer; font-size: 20px; }
+    .star.interactive:hover,
+    .star.interactive.preview { color: #ffc107; }
+
+    .card-date { font-size: 10px; font-family: var(--font-mono); color: var(--text-card-date); margin-top: 3px; }
+    .card-notes {
+      font-size: 11px; color: var(--text-card-notes);
+      margin-top: 7px; line-height: 1.5;
+      overflow: hidden; display: -webkit-box;
+      -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical;
+    }
+    .card-no-flp { font-size: 10px; color: #c0392b; margin-top: 5px; }
+
+    /* ── Sticky Notes ─────────────────────────────────────── */
+    .sticky {
+      position: absolute;
+      width: 180px;
+      border-radius: 4px;
+      box-shadow: 2px 3px 10px rgba(0,0,0,0.25);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      user-select: none;
+      transition: box-shadow 0.15s;
+    }
+    .sticky:hover {
+      box-shadow: 3px 5px 18px rgba(0,0,0,0.35);
+    }
+    .sticky.dragging {
+      box-shadow: 6px 10px 32px rgba(0,0,0,0.5);
+      z-index: 1000 !important;
+      opacity: 0.92;
+      cursor: grabbing;
+    }
+
+    .sticky-handle {
+      height: 26px;
+      background: rgba(0,0,0,0.12);
+      display: flex;
+      align-items: center;
+      padding: 0 6px 0 8px;
+      cursor: grab;
+      flex-shrink: 0;
+    }
+    .sticky-handle:active { cursor: grabbing; }
+
+    .sticky-dots {
+      font-size: 13px;
+      opacity: 0.5;
+      flex: 1;
+      letter-spacing: 1px;
+    }
+
+    .sticky-color-strip {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .sticky-swatch {
+      width: 13px; height: 13px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 1.5px solid rgba(0,0,0,0.15);
+      flex-shrink: 0;
+      transition: transform 0.1s;
+    }
+    .sticky-swatch:hover { transform: scale(1.3); }
+    .sticky-swatch.active { border-color: rgba(0,0,0,0.5); transform: scale(1.2); }
+
+    .sticky-del {
+      background: none;
+      border: none;
+      color: rgba(0,0,0,0.4);
+      font-size: 15px;
+      cursor: pointer;
+      line-height: 1;
+      padding: 0 2px;
+      margin-left: 6px;
+      transition: color 0.1s;
+    }
+    .sticky-del:hover { color: rgba(0,0,0,0.8); }
+
+    .sticky-text {
+      background: none;
+      border: none;
+      outline: none;
+      resize: none;
+      font-size: 12.5px;
+      line-height: 1.55;
+      color: rgba(0,0,0,0.78);
+      padding: 10px 12px 12px;
+      font-family: inherit;
+      min-height: 80px;
+      cursor: text;
+    }
+    .sticky-text::placeholder { color: rgba(0,0,0,0.35); }
+
+    /* ── Modal overlay ────────────────────────────────────── */
+    #modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: var(--modal-overlay);
+      backdrop-filter: blur(6px);
+      z-index: 500;
+      align-items: center; justify-content: center;
+    }
+    #modal-overlay.open { display: flex; }
+
+    /* ── Modal ────────────────────────────────────────────── */
+    #modal {
+      background: var(--bg-modal);
+      border: 1px solid var(--border-modal);
+      border-radius: 14px;
+      width: 500px;
+      max-height: 88vh;
+      overflow-y: auto;
+      padding: 28px 28px 24px;
+      position: relative;
+      animation: popIn 0.18s ease;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.95) translateY(8px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    #modal-close {
+      position: absolute; top: 18px; right: 18px;
+      background: var(--bg-close-btn); border: none;
+      color: var(--text-dim); font-size: 16px;
+      width: 28px; height: 28px; border-radius: 50%;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s, color 0.15s;
+    }
+    #modal-close:hover { background: var(--border-input); color: var(--text); }
+
+    #modal-stripe { height: 6px; border-radius: 4px; margin-bottom: 20px; transition: background 0.2s; }
+
+    #modal-title {
+      font-size: 19px; font-weight: 700;
+      color: var(--text-modal-title);
+      margin-bottom: 22px; padding-right: 30px; line-height: 1.25;
+    }
+
+    .section { margin-bottom: 20px; }
+    .section-label {
+      font-size: 10px; font-weight: 700; color: var(--text-label);
+      text-transform: uppercase; letter-spacing: 1px; margin-bottom: 9px;
+    }
+
+    #modal-stars { display: flex; gap: 4px; }
+    #color-picker { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .color-dot {
+      width: 26px; height: 26px; border-radius: 50%; cursor: pointer;
+      border: 2px solid transparent;
+      transition: transform 0.15s, border-color 0.15s;
+      outline: 2px solid transparent; outline-offset: 2px;
+    }
+    .color-dot:hover { transform: scale(1.2); }
+    .color-dot.active {
+      border-color: var(--text);
+      outline-color: rgba(128,128,128,0.3);
+      transform: scale(1.15);
+    }
+
+    #modal-notes {
+      width: 100%; background: transparent;
+      border: none; border-bottom: 1px solid var(--border-modal); border-radius: 0;
+      color: var(--text-input); padding: 10px 0; font-size: 13px;
+      font-family: inherit; resize: none; min-height: 90px;
+      outline: none; line-height: 1.65; transition: border-color 0.15s;
+    }
+    #modal-notes:focus { border-color: var(--accent); }
+    #modal-notes::placeholder { color: var(--text-dim); }
+
+    #modal-flps { display: flex; flex-direction: column; gap: 6px; }
+    .flp-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 4px;
+      background: transparent; border: none;
+      border-bottom: 1px solid var(--border-flp-row);
+      border-radius: 0; cursor: pointer;
+      transition: color 0.15s;
+    }
+    .flp-row:last-child { border-bottom: none; }
+    .flp-row:hover { color: var(--accent); }
+    .flp-name {
+      flex: 1; font-size: 12px; font-family: var(--font-mono); color: var(--text-flp);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+
+    #open-btn {
+      width: 100%; padding: 13px; background: var(--accent); color: #fff;
+      border: none; border-radius: 8px; font-size: 14px; font-weight: 700;
+      cursor: pointer; letter-spacing: 0.3px;
+      transition: background 0.15s, transform 0.1s; margin-top: 6px;
+    }
+    #open-btn:hover { background: var(--accent-hover); }
+    #open-btn:active { transform: scale(0.98); }
+    #open-btn:disabled { background: var(--open-disabled-bg); color: var(--open-disabled-color); cursor: not-allowed; transform: none; }
+
+    /* Hide button in modal */
+    #hide-btn {
+      width: 100%; padding: 9px; margin-top: 8px;
+      background: none; border: 1px solid var(--border-input);
+      border-radius: 8px; color: var(--text-dim); font-size: 13px;
+      cursor: pointer; transition: color 0.15s, border-color 0.15s;
+    }
+    #hide-btn:hover { color: #e74c3c; border-color: #e74c3c; }
+    #hide-btn.unhide:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* ── Setup screen ─────────────────────────────────────── */
+    #setup-screen {
+      display: none;
+      position: fixed; inset: 0;
+      background: var(--bg);
+      z-index: 600;
+      align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    #setup-screen.open { display: flex; }
+
+    #setup-card {
+      background: var(--bg-modal);
+      border: 1px solid var(--border-modal);
+      border-radius: 16px;
+      width: 520px;
+      padding: 40px 40px 36px;
+      animation: popIn 0.2s ease;
+      position: relative;
+    }
+
+    #setup-close {
+      position: absolute; top: 14px; right: 14px;
+      background: var(--bg-close-btn); border: none;
+      color: var(--text-dim); font-size: 16px;
+      width: 28px; height: 28px; border-radius: 50%;
+      cursor: pointer; display: none; align-items: center; justify-content: center;
+      transition: background 0.15s, color 0.15s;
+    }
+    #setup-close.visible { display: flex; }
+    #setup-close:hover { background: var(--border-input); color: var(--text); }
+
+    #setup-card h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-modal-title);
+      margin-bottom: 8px;
+    }
+
+    #setup-card p {
+      font-size: 14px;
+      color: var(--text-dim);
+      line-height: 1.55;
+      margin-bottom: 28px;
+    }
+
+    .setup-label {
+      font-size: 10px; font-weight: 700; color: var(--text-label);
+      text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;
+    }
+
+    #setup-path-row {
+      display: flex; gap: 8px; margin-bottom: 8px;
+    }
+
+    #setup-path {
+      flex: 1;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--border-input);
+      border-radius: 0;
+      color: var(--text-input);
+      padding: 9px 4px;
+      font-size: 13px;
+      font-family: var(--font-mono);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    #setup-path:focus { border-color: var(--accent); }
+
+    #setup-browse-btn {
+      background: var(--bg-input);
+      border: 1px solid var(--border-input);
+      border-radius: 7px;
+      color: var(--text);
+      font-size: 13px;
+      padding: 0 14px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    #setup-browse-btn:hover { border-color: var(--accent); }
+
+    #setup-path-hint {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-bottom: 24px;
+      min-height: 16px;
+    }
+    #setup-path-hint.error { color: #e74c3c; }
+    #setup-path-hint.ok    { color: #2ecc71; }
+
+    #setup-save-btn {
+      width: 100%; padding: 13px;
+      background: var(--accent); color: #fff;
+      border: none; border-radius: 8px;
+      font-size: 14px; font-weight: 700; cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+    }
+    #setup-save-btn:hover { background: var(--accent-hover); }
+    #setup-save-btn:active { transform: scale(0.98); }
+    #setup-save-btn:disabled { background: var(--open-disabled-bg); color: var(--open-disabled-color); cursor: not-allowed; transform: none; }
+
+    #daw-picker {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
+    .daw-opt {
+      flex: 1;
+      padding: 14px 10px;
+      border: 1.5px solid var(--border-input);
+      border-radius: 9px;
+      cursor: pointer;
+      text-align: center;
+      transition: border-color 0.15s, background 0.15s;
+      user-select: none;
+    }
+    .daw-opt:hover { border-color: var(--accent); }
+    .daw-opt.active {
+      border-color: var(--accent);
+      background: rgba(255,108,0,0.07);
+    }
+    .daw-opt-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .daw-opt-ext {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 3px;
+    }
+
+    #setup-folder-section { margin-top: 22px; }
+
+    /* Toast */
+    #toast {
+      position: fixed; bottom: 28px; left: 50%;
+      transform: translateX(-50%) translateY(70px);
+      background: var(--toast-bg); color: var(--toast-text);
+      padding: 10px 22px; border-radius: 8px; font-size: 13px;
+      border: 1px solid var(--toast-border);
+      transition: transform 0.25s ease, background 0.2s;
+      z-index: 999; pointer-events: none;
+    }
+    #toast.show { transform: translateX(-50%) translateY(0); }
+
+    .hdr-divider {
+      width: 1px;
+      height: 22px;
+      background: var(--border);
+      flex-shrink: 0;
+    }
+
+    /* ── Reset modal ──────────────────────────────────────── */
+    #reset-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: var(--modal-overlay);
+      backdrop-filter: blur(6px);
+      z-index: 500;
+      align-items: center; justify-content: center;
+    }
+    #reset-overlay.open { display: flex; }
+
+    #reset-modal {
+      background: var(--bg-modal);
+      border: 1px solid var(--border-modal);
+      border-radius: 14px;
+      width: 420px;
+      padding: 32px 32px 28px;
+      position: relative;
+      animation: popIn 0.18s ease;
+      text-align: center;
+    }
+
+    #reset-modal h3 {
+      font-size: 17px; font-weight: 700;
+      color: var(--text-modal-title);
+      margin-bottom: 10px;
+    }
+
+    #reset-modal p {
+      font-size: 13px; color: var(--text-dim);
+      line-height: 1.55; margin-bottom: 24px;
+    }
+
+    #reset-modal .reset-actions {
+      display: flex; flex-direction: column; gap: 8px;
+    }
+
+    #reset-confirm-btn {
+      width: 100%; padding: 12px;
+      background: #e74c3c; color: #fff;
+      border: none; border-radius: 8px;
+      font-size: 14px; font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+    }
+    #reset-confirm-btn:hover { background: #c0392b; }
+    #reset-confirm-btn:active { transform: scale(0.98); }
+
+    #reset-cancel-btn {
+      width: 100%; padding: 10px;
+      background: none;
+      border: 1px solid var(--border-input);
+      border-radius: 8px;
+      color: var(--text-dim); font-size: 13px;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    #reset-cancel-btn:hover { color: var(--text); border-color: var(--text-dim); }
+  </style>
+</head>
+<body>
+
+<div id="header">
+  <img id="app-logo" src="../static/logo_light.svg" alt="The Song Is">
+  <div class="hdr-divider"></div>
+  <span id="project-count"></span>
+  <div id="search-wrap">
+    <input id="search" type="text" placeholder="Search projects…" autocomplete="off">
+    <button id="search-clear" onclick="clearSearch()" title="Clear">×</button>
+  </div>
+  <div class="hdr-divider"></div>
+  <button class="hdr-btn" onclick="addSticky()">+ Sticky Note</button>
+  <button class="hdr-btn" id="show-hidden-btn" onclick="toggleShowHidden()">Show Hidden</button>
+  <button class="hdr-btn" onclick="beginReset()">Reset Layout</button>
+  <button class="hdr-btn" onclick="exportData()">Export Data</button>
+  <button class="hdr-btn" onclick="loadDataJson()" title="Load a saved data.json backup">Load Data</button>
+  <button class="hdr-btn" onclick="openSetup()" title="Change DAW or projects folder">Settings</button>
+  <button class="hdr-btn" id="about-btn" onclick="openAbout()">About App</button>
+  <button id="theme-btn" onclick="toggleTheme()" title="Toggle light/dark mode">🌙</button>
+</div>
+
+<div id="canvas-wrap">
+  <div id="canvas"></div>
+</div>
+
+<!-- Setup screen -->
+<div id="setup-screen">
+  <div id="setup-card">
+    <button id="setup-close" onclick="closeSetup()">✕</button>
+    <h2 id="setup-heading">Welcome to The Song Is</h2>
+    <p id="setup-desc">Select your DAW, then point the app at your projects folder.</p>
+
+    <div class="setup-label">Your DAW</div>
+    <div id="daw-picker">
+      <div class="daw-opt" data-daw="fl_studio" onclick="selectDaw('fl_studio')">
+        <div class="daw-opt-name">FL Studio</div>
+        <div class="daw-opt-ext">.flp files</div>
+      </div>
+      <div class="daw-opt" data-daw="ableton" onclick="selectDaw('ableton')">
+        <div class="daw-opt-name">Ableton Live</div>
+        <div class="daw-opt-ext">.als files</div>
+      </div>
+    </div>
+
+    <div id="setup-folder-section" style="display:none">
+      <div class="setup-label">Projects Folder</div>
+      <div id="setup-path-row">
+        <input id="setup-path" type="text" placeholder="Path to your projects folder…" oninput="onSetupPathInput()">
+        <button id="setup-browse-btn" onclick="browseFolder()">Browse…</button>
+      </div>
+      <div id="setup-path-hint"></div>
+
+      <button id="setup-save-btn" onclick="saveFolder()" disabled>Open Browser</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div id="modal-overlay">
+  <div id="modal">
+    <button id="modal-close" onclick="closeModal()">✕</button>
+    <div id="modal-stripe"></div>
+    <div id="modal-title"></div>
+
+    <div class="section">
+      <div class="section-label">Rating</div>
+      <div id="modal-stars"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Color Tag</div>
+      <div id="color-picker"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Notes</div>
+      <textarea id="modal-notes" placeholder="What's this project about? Ideas, status, anything…"></textarea>
+    </div>
+
+    <div class="section" id="flp-section">
+      <div class="section-label">Project Files</div>
+      <div id="modal-flps"></div>
+    </div>
+
+    <button id="open-btn">Open in DAW</button>
+    <button id="hide-btn" onclick="toggleHideProject()"></button>
+  </div>
+</div>
+
+<!-- About modal -->
+<div id="about-overlay">
+  <div id="about-modal">
+    <button id="about-close" onclick="closeAbout()">✕</button>
+    <img src="../static/logo.svg" alt="The Song Is">
+    <p id="about-by">by <a href="https://problem-industries.com" target="_blank" rel="noopener">problem-industries.com</a></p>
+
+    <div id="about-content">
+      <p>
+        <a href="https://thesong.is" target="_blank">Visit thesong.is</a> for more information.
+      </p>
+
+      <p style="margin-top: 16px;">
+        Source code available on<br>
+        <a href="https://github.com/problemindustries/the-song-is" target="_blank">github.com/problemindustries/the-song-is</a>
+      </p>
+
+      <p style="margin-top: 16px;">
+        Bugs, feature suggestions, feedback<br>
+        <a href="mailto:problem.industries@gmail.com">problem.industries@gmail.com</a>
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<!-- Reset confirm modal -->
+<div id="reset-overlay">
+  <div id="reset-modal">
+    <h3>Reset layout?</h3>
+    <p>Your current layout will be saved as a backup file. You can restore it any time via Load Data.</p>
+    <div class="reset-actions">
+      <button id="reset-confirm-btn" onclick="doReset()">Backup &amp; Reset</button>
+      <button id="reset-cancel-btn" onclick="cancelReset()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+  // ── Constants ──────────────────────────────────────────────
+  const COLORS = [
+    { name: 'None',   hex: '#444444' },
+    { name: 'Red',    hex: '#e74c3c' },
+    { name: 'Orange', hex: '#ff6c00' },
+    { name: 'Yellow', hex: '#f1c40f' },
+    { name: 'Lime',   hex: '#2ecc71' },
+    { name: 'Teal',   hex: '#1abc9c' },
+    { name: 'Blue',   hex: '#3498db' },
+    { name: 'Purple', hex: '#9b59b6' },
+    { name: 'Pink',   hex: '#e91e63' },
+    { name: 'White',  hex: '#cccccc' },
+  ];
+
+  const STICKY_COLORS = [
+    '#fef08a', // yellow
+    '#fda4af', // pink
+    '#bfdbfe', // blue
+    '#bbf7d0', // green
+    '#e9d5ff', // purple
+    '#fed7aa', // orange
+  ];
+
+  const CARD_W = 188, CARD_H = 165, GAP_X = 22, GAP_Y = 22, PAD = 20;
+
+  // ── State ──────────────────────────────────────────────────
+  let projects = [];
+  let metadata = {};
+  let activeProject = null;
+  let notesTimer = null;
+  let showHidden = false;
+  let currentDaw = null;    // daw in use ('fl_studio' | 'ableton')
+  let selectedDaw = null;   // selection in the setup screen
+  let defaultDirs = {};     // { fl_studio: '...', ableton: '...' }
+
+  // Drag (shared for cards + stickies)
+  let dragEl = null, dragOffX = 0, dragOffY = 0;
+  let dragStartX = 0, dragStartY = 0, didDrag = false;
+
+  // ── Theme ──────────────────────────────────────────────────
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    document.getElementById('theme-btn').textContent = theme === 'dark' ? '☀️' : '🌙';
+    document.getElementById('app-logo').src = theme === 'dark'
+      ? '../static/logo_dark.svg'
+      : '../static/logo_light.svg';
+    localStorage.setItem('theme', theme);
+  }
+  function toggleTheme() {
+    applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  }
+
+  // ── Init ───────────────────────────────────────────────────
+  async function init() {
+    applyTheme(localStorage.getItem('theme') || 'light');
+
+    const config = await window.pywebview.api.get_config();
+    defaultDirs = config.default_dirs || {};
+
+    if (!config.is_configured) {
+      openSetup();
+      return;
+    }
+
+    currentDaw = config.daw;
+    updateDawUI();
+    await loadProjects();
+  }
+
+  function updateDawUI() {}
+
+  async function loadProjects() {
+    [projects, metadata] = await Promise.all([
+      window.pywebview.api.get_projects(),
+      window.pywebview.api.get_metadata(),
+    ]);
+    renderCanvas();
+    updateCount();
+  }
+
+  // ── Setup screen ────────────────────────────────────────────
+  function openSetup() {
+    const isFirstLaunch = !currentDaw;
+
+    // Set context-appropriate copy
+    document.getElementById('setup-heading').textContent = isFirstLaunch
+      ? 'Welcome to The Song Is'
+      : 'settings';
+    document.getElementById('setup-desc').textContent = isFirstLaunch
+      ? 'Select your DAW, then point the app at your projects folder.'
+      : 'Change your DAW or projects folder. Your current settings are pre-filled below.';
+    document.getElementById('setup-save-btn').textContent = isFirstLaunch
+      ? 'Open Browser'
+      : 'Save Changes';
+
+    // Pre-select current DAW
+    selectedDaw = currentDaw;
+    document.querySelectorAll('.daw-opt').forEach(el => {
+      el.classList.toggle('active', el.dataset.daw === selectedDaw);
+    });
+
+    const folderSection = document.getElementById('setup-folder-section');
+    if (selectedDaw) {
+      folderSection.style.display = '';
+      const pathEl = document.getElementById('setup-path');
+      pathEl.value = (metadata && metadata._projects_dir) || defaultDirs[selectedDaw] || '';
+      onSetupPathInput();
+    } else {
+      folderSection.style.display = 'none';
+    }
+
+    document.getElementById('setup-close').classList.toggle('visible', !isFirstLaunch);
+    document.getElementById('setup-screen').classList.add('open');
+  }
+
+  function selectDaw(daw) {
+    selectedDaw = daw;
+    document.querySelectorAll('.daw-opt').forEach(el => {
+      el.classList.toggle('active', el.dataset.daw === daw);
+    });
+
+    const folderSection = document.getElementById('setup-folder-section');
+    folderSection.style.display = '';
+
+    const pathEl = document.getElementById('setup-path');
+    // Auto-fill default path if empty or currently showing another DAW's default
+    const isOtherDefault = Object.values(defaultDirs).includes(pathEl.value);
+    if (!pathEl.value || isOtherDefault) {
+      pathEl.value = defaultDirs[daw] || '';
+    }
+    onSetupPathInput();
+  }
+
+  function closeSetup() {
+    document.getElementById('setup-screen').classList.remove('open');
+  }
+
+  function onSetupPathInput() {
+    const val = document.getElementById('setup-path').value.trim();
+    const hint = document.getElementById('setup-path-hint');
+    const btn  = document.getElementById('setup-save-btn');
+    if (!val) {
+      hint.textContent = '';
+      hint.className = '';
+      btn.disabled = true;
+      return;
+    }
+    // Optimistic — server will validate on save
+    hint.textContent = val;
+    hint.className = '';
+    btn.disabled = false;
+  }
+
+  async function browseFolder() {
+    const btn = document.getElementById('setup-browse-btn');
+    btn.textContent = 'Opening…';
+    btn.disabled = true;
+    try {
+      const data = await window.pywebview.api.browse_folder();
+      if (data.path) {
+        document.getElementById('setup-path').value = data.path;
+        onSetupPathInput();
+      }
+    } catch (e) {
+      toast('Could not open folder picker');
+    } finally {
+      btn.textContent = 'Browse…';
+      btn.disabled = false;
+    }
+  }
+
+  async function saveFolder() {
+    if (!selectedDaw) {
+      toast('Please select a DAW first');
+      return;
+    }
+    const path = document.getElementById('setup-path').value.trim();
+    const hint = document.getElementById('setup-path-hint');
+    const btn  = document.getElementById('setup-save-btn');
+    btn.disabled = true;
+    btn.textContent = 'Saving…';
+
+    const data = await window.pywebview.api.set_config(selectedDaw, path);
+
+    if (data.ok) {
+      currentDaw = selectedDaw;
+      updateDawUI();
+      hint.textContent = '✓ Saved';
+      hint.className = 'ok';
+      closeSetup();
+      await loadProjects();
+    } else {
+      hint.textContent = data.error || 'Invalid folder path';
+      hint.className = 'error';
+      btn.disabled = false;
+      btn.textContent = currentDaw ? 'Save Changes' : 'Open Browser';
+    }
+  }
+
+  // ── Metadata ───────────────────────────────────────────────
+  function getMeta(name) { return metadata[name] || {}; }
+  function patchMeta(name, patch) {
+    metadata[name] = { ...getMeta(name), ...patch };
+    saveMeta();
+  }
+  async function saveMeta() {
+    await window.pywebview.api.set_metadata(metadata);
+  }
+
+  // ── Stickies store ─────────────────────────────────────────
+  function getStickies() { return metadata._stickies || []; }
+  function setStickies(arr) { metadata._stickies = arr; saveMeta(); }
+
+  // ── Layout ─────────────────────────────────────────────────
+  function defaultPos(i) {
+    const wrap = document.getElementById('canvas-wrap');
+    const cols = Math.max(1, Math.floor((wrap.clientWidth - PAD * 2 + GAP_X) / (CARD_W + GAP_X)));
+    return {
+      x: PAD + (i % cols) * (CARD_W + GAP_X),
+      y: PAD + Math.floor(i / cols) * (CARD_H + GAP_Y),
+    };
+  }
+  function exportFilename() {
+    const n = new Date();
+    const p = v => String(v).padStart(2, '0');
+    return `daw_companion_export_${n.getFullYear()}${p(n.getMonth()+1)}${p(n.getDate())}_${p(n.getHours())}${p(n.getMinutes())}${p(n.getSeconds())}.json`;
+  }
+
+  async function exportData() {
+    const btn = document.querySelector('[onclick="exportData()"]');
+    btn.textContent = 'Exporting…';
+    btn.disabled = true;
+    try {
+      const r = await window.pywebview.api.export_data(exportFilename());
+      toast(r.ok ? 'Data exported' : 'Error: ' + (r.error || 'Could not export'));
+    } catch (e) {
+      toast('Error exporting data');
+    } finally {
+      btn.textContent = 'Export Data';
+      btn.disabled = false;
+    }
+  }
+
+  function beginReset() {
+    document.getElementById('reset-overlay').classList.add('open');
+  }
+
+  function cancelReset() {
+    document.getElementById('reset-overlay').classList.remove('open');
+  }
+
+  async function doReset() {
+    const btn = document.getElementById('reset-confirm-btn');
+    btn.textContent = 'Saving backup…';
+    btn.disabled = true;
+    try {
+      const r = await window.pywebview.api.export_data(exportFilename());
+      if (!r.ok) {
+        toast('Backup failed: ' + (r.error || 'unknown'));
+        return;
+      }
+    } finally {
+      btn.textContent = 'Backup & Reset';
+      btn.disabled = false;
+    }
+    projects.forEach((p, i) => {
+      metadata[p.name] = { ...getMeta(p.name), position: defaultPos(i) };
+    });
+    saveMeta();
+    renderCanvas();
+    cancelReset();
+    toast('Layout reset — backup saved');
+  }
+
+  document.getElementById('reset-overlay').addEventListener('click', e => {
+    if (e.target === document.getElementById('reset-overlay')) cancelReset();
+  });
+
+  // ── Canvas sizing ──────────────────────────────────────────
+  function fitCanvas() {
+    requestAnimationFrame(() => {
+      const wrap   = document.getElementById('canvas-wrap');
+      const canvas = document.getElementById('canvas');
+      const EXTRA  = 360;
+      let maxX = 0, maxY = 0;
+      document.querySelectorAll('.card, .sticky').forEach(el => {
+        if (el.style.display === 'none') return;
+        const x = parseInt(el.style.left) || 0;
+        const y = parseInt(el.style.top)  || 0;
+        maxX = Math.max(maxX, x + (el.offsetWidth  || CARD_W));
+        maxY = Math.max(maxY, y + (el.offsetHeight || CARD_H));
+      });
+      canvas.style.width  = Math.max(wrap.clientWidth,  maxX + EXTRA) + 'px';
+      canvas.style.height = Math.max(wrap.clientHeight, maxY + EXTRA) + 'px';
+    });
+  }
+
+  // ── Render all ─────────────────────────────────────────────
+  function renderCanvas() {
+    const canvas = document.getElementById('canvas');
+    canvas.innerHTML = '';
+    projects.forEach((p, i) => canvas.appendChild(buildCard(p, i)));
+    getStickies().forEach(s => canvas.appendChild(buildSticky(s)));
+    fitCanvas();
+  }
+
+  // ── Show hidden toggle ─────────────────────────────────────
+  function toggleShowHidden() {
+    showHidden = !showHidden;
+    document.getElementById('show-hidden-btn').classList.toggle('active', showHidden);
+    document.querySelectorAll('.card').forEach(c => {
+      const hidden = getMeta(c.dataset.name).hidden;
+      if (hidden) c.style.display = showHidden ? '' : 'none';
+    });
+    updateCount();
+  }
+
+  // ── Project cards ──────────────────────────────────────────
+  function buildCard(project, index) {
+    const meta   = getMeta(project.name);
+    const pos    = meta.position || defaultPos(index);
+    const color  = meta.color || COLORS[0].hex;
+    const rating = meta.rating || 0;
+    const notes  = meta.notes  || '';
+    const hidden = meta.hidden || false;
+    const date   = project.mtime
+      ? new Date(project.mtime * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' })
+      : '';
+
+    const card = document.createElement('div');
+    card.className = 'card' + (hidden ? ' is-hidden' : '');
+    card.dataset.name  = project.name;
+    card.dataset.index = index;
+    card.style.left   = pos.x + 'px';
+    card.style.top    = pos.y + 'px';
+    card.style.zIndex = meta.zIndex || 1;
+    if (hidden && !showHidden) card.style.display = 'none';
+
+    card.innerHTML = `
+      <div class="card-stripe" style="background:${color}"></div>
+      <div class="card-body">
+        <div class="card-title" title="${esc(project.name)}">${esc(project.name)}</div>
+        <div class="card-stars">${miniStars(rating)}</div>
+        ${date  ? `<div class="card-date">${date}</div>` : ''}
+        ${notes ? `<div class="card-notes">${esc(notes)}</div>` : ''}
+        ${!project.main_flp ? `<div class="card-no-flp">No ${currentDaw === 'ableton' ? '.als' : '.flp'} file found</div>` : ''}
+      </div>
+    `;
+    card.addEventListener('mousedown', e => startDrag(e, card, 'card'));
+    return card;
+  }
+
+  function refreshCard(name) {
+    const old = document.querySelector(`.card[data-name="${CSS.escape(name)}"]`);
+    if (!old) return;
+    const i = parseInt(old.dataset.index);
+    const p = projects.find(p => p.name === name);
+    if (!p) return;
+    metadata[name] = { ...getMeta(name), position: { x: parseInt(old.style.left), y: parseInt(old.style.top) } };
+    old.replaceWith(buildCard(p, i));
+  }
+
+  function miniStars(n) {
+    return Array.from({ length: 5 }, (_, i) =>
+      `<span class="star${i < n ? ' on' : ''}">★</span>`
+    ).join('');
+  }
+
+  // ── Sticky notes ───────────────────────────────────────────
+  function addSticky() {
+    const wrap = document.getElementById('canvas-wrap');
+    const id   = Date.now().toString(36) + Math.random().toString(36).slice(2);
+    const sticky = {
+      id,
+      text: '',
+      color: STICKY_COLORS[0],
+      x: wrap.scrollLeft + 40,
+      y: wrap.scrollTop  + 40,
+      zIndex: ++topZ,
+    };
+    const arr = getStickies();
+    arr.push(sticky);
+    setStickies(arr);
+    document.getElementById('canvas').appendChild(buildSticky(sticky));
+  }
+
+  function buildSticky(s) {
+    const el = document.createElement('div');
+    el.className = 'sticky';
+    el.dataset.stickyId = s.id;
+    el.style.left       = s.x + 'px';
+    el.style.top        = s.y + 'px';
+    el.style.zIndex     = s.zIndex || 1;
+    el.style.background = s.color;
+
+    // Handle (drag area)
+    const handle = document.createElement('div');
+    handle.className = 'sticky-handle';
+
+    const dots = document.createElement('span');
+    dots.className = 'sticky-dots';
+    dots.textContent = '⠿ ⠿ ⠿';
+
+    const colorStrip = document.createElement('div');
+    colorStrip.className = 'sticky-color-strip';
+    STICKY_COLORS.forEach(c => {
+      const sw = document.createElement('div');
+      sw.className = 'sticky-swatch' + (c === s.color ? ' active' : '');
+      sw.style.background = c;
+      sw.addEventListener('click', e => {
+        e.stopPropagation();
+        el.style.background = c;
+        colorStrip.querySelectorAll('.sticky-swatch').forEach(sw2 => {
+          sw2.classList.toggle('active', sw2.style.backgroundColor === hexToRgb(c));
+        });
+        updateStickyField(s.id, 'color', c);
+      });
+      colorStrip.appendChild(sw);
+    });
+
+    const del = document.createElement('button');
+    del.className = 'sticky-del';
+    del.textContent = '×';
+    del.addEventListener('click', e => {
+      e.stopPropagation();
+      setStickies(getStickies().filter(x => x.id !== s.id));
+      el.remove();
+    });
+
+    handle.appendChild(dots);
+    handle.appendChild(colorStrip);
+    handle.appendChild(del);
+
+    // Textarea
+    const ta = document.createElement('textarea');
+    ta.className = 'sticky-text';
+    ta.placeholder = 'Type a note…';
+    ta.value = s.text || '';
+    ta.addEventListener('mousedown', e => e.stopPropagation()); // don't start drag
+    ta.addEventListener('input', () => {
+      clearTimeout(ta._timer);
+      ta._timer = setTimeout(() => updateStickyField(s.id, 'text', ta.value), 400);
+      // auto-grow
+      ta.style.height = 'auto';
+      ta.style.height = ta.scrollHeight + 'px';
+    });
+    // initial height
+    requestAnimationFrame(() => {
+      ta.style.height = 'auto';
+      ta.style.height = Math.max(80, ta.scrollHeight) + 'px';
+    });
+
+    el.appendChild(handle);
+    el.appendChild(ta);
+
+    handle.addEventListener('mousedown', e => startDrag(e, el, 'sticky'));
+    return el;
+  }
+
+  function updateStickyField(id, field, value) {
+    const arr = getStickies();
+    const s = arr.find(x => x.id === id);
+    if (s) { s[field] = value; setStickies(arr); }
+  }
+
+  // ── Shared drag ────────────────────────────────────────────
+  let topZ = 10;
+  let dragType = null; // 'card' | 'sticky'
+
+  function startDrag(e, el, type) {
+    if (e.button !== 0) return;
+    dragEl    = el;
+    dragType  = type;
+    didDrag   = false;
+    dragStartX = e.clientX;
+    dragStartY = e.clientY;
+
+    const rect = el.getBoundingClientRect();
+    dragOffX = e.clientX - rect.left;
+    dragOffY = e.clientY - rect.top;
+
+    topZ++;
+    el.style.zIndex = topZ;
+    e.preventDefault();
+  }
+
+  document.addEventListener('mousemove', e => {
+    if (!dragEl) return;
+    const dx = e.clientX - dragStartX, dy = e.clientY - dragStartY;
+    if (!didDrag && Math.abs(dx) < 5 && Math.abs(dy) < 5) return;
+    didDrag = true;
+
+    dragEl.classList.add('dragging');
+    const wrap = document.getElementById('canvas-wrap');
+    const r = wrap.getBoundingClientRect();
+    const x = e.clientX - r.left + wrap.scrollLeft - dragOffX;
+    const y = e.clientY - r.top  + wrap.scrollTop  - dragOffY;
+    dragEl.style.left = Math.max(0, x) + 'px';
+    dragEl.style.top  = Math.max(0, y) + 'px';
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (!dragEl) return;
+    dragEl.classList.remove('dragging');
+
+    const x = parseInt(dragEl.style.left);
+    const y = parseInt(dragEl.style.top);
+
+    if (dragType === 'card') {
+      if (didDrag) {
+        patchMeta(dragEl.dataset.name, { position: { x, y }, zIndex: topZ });
+      } else {
+        openModal(dragEl.dataset.name);
+      }
+    } else if (dragType === 'sticky') {
+      if (didDrag) {
+        updateStickyField(dragEl.dataset.stickyId, 'x', x);
+        updateStickyField(dragEl.dataset.stickyId, 'y', y);
+        updateStickyField(dragEl.dataset.stickyId, 'zIndex', topZ);
+      }
+    }
+
+    dragEl = null;
+    dragType = null;
+    didDrag = false;
+    fitCanvas();
+  });
+
+  // ── Search ─────────────────────────────────────────────────
+  document.getElementById('search').addEventListener('input', function () {
+    document.getElementById('search-clear').style.display = this.value ? 'block' : 'none';
+    const q = this.value.trim().toLowerCase();
+    let count = 0;
+    document.querySelectorAll('.card').forEach(c => {
+      const hidden = getMeta(c.dataset.name).hidden;
+      if (hidden && !showHidden) { c.style.display = 'none'; return; }
+      const match = !q || c.dataset.name.toLowerCase().includes(q);
+      c.classList.toggle('filtered-out', !match);
+      if (match && !(hidden && !showHidden)) count++;
+    });
+    document.getElementById('project-count').textContent =
+      `${count} project${count !== 1 ? 's' : ''}`;
+  });
+
+  function clearSearch() {
+    const input = document.getElementById('search');
+    input.value = '';
+    document.getElementById('search-clear').style.display = 'none';
+    input.dispatchEvent(new Event('input'));
+    input.focus();
+  }
+
+  function updateCount() {
+    const visible = projects.filter(p => showHidden ? true : !getMeta(p.name).hidden).length;
+    document.getElementById('project-count').textContent = `${visible} project${visible !== 1 ? 's' : ''}`;
+  }
+
+  // ── Modal ──────────────────────────────────────────────────
+  function openModal(name) {
+    activeProject = projects.find(p => p.name === name);
+    if (!activeProject) return;
+
+    const meta   = getMeta(name);
+    const color  = meta.color || COLORS[0].hex;
+    const rating = meta.rating || 0;
+
+    document.getElementById('modal-title').textContent = name;
+    document.getElementById('modal-stripe').style.background = color;
+
+    // Stars
+    const starsEl = document.getElementById('modal-stars');
+    starsEl.innerHTML = Array.from({ length: 5 }, (_, i) =>
+      `<span class="star interactive${i < rating ? ' on' : ''}" data-n="${i + 1}">★</span>`
+    ).join('');
+    starsEl.querySelectorAll('.star').forEach(s => {
+      s.addEventListener('mouseenter', () => previewStars(parseInt(s.dataset.n)));
+      s.addEventListener('mouseleave', () => resetStarPreview());
+      s.addEventListener('click',      () => clickStar(parseInt(s.dataset.n)));
+    });
+
+    // Color picker
+    const pickerEl = document.getElementById('color-picker');
+    pickerEl.innerHTML = '';
+    COLORS.forEach(c => {
+      const dot = document.createElement('div');
+      dot.className = 'color-dot' + (c.hex === color ? ' active' : '');
+      dot.style.background = c.hex;
+      dot.title = c.name;
+      dot.addEventListener('click', () => pickColor(c.hex));
+      pickerEl.appendChild(dot);
+    });
+
+    // Notes
+    const notesEl = document.getElementById('modal-notes');
+    notesEl.value = meta.notes || '';
+    notesEl.oninput = () => {
+      clearTimeout(notesTimer);
+      notesTimer = setTimeout(() => {
+        patchMeta(name, { notes: notesEl.value });
+        refreshCard(name);
+      }, 400);
+    };
+
+    // FLP files
+    const flpsEl = document.getElementById('modal-flps');
+    flpsEl.innerHTML = '';
+    if (activeProject.flps && activeProject.flps.length) {
+      document.getElementById('flp-section').style.display = '';
+      activeProject.flps.forEach(flp => {
+        const row = document.createElement('div');
+        row.className = 'flp-row';
+        row.innerHTML = `<span class="flp-name">${esc(flp.split('/').pop())}</span>`;
+        row.addEventListener('click', () => openFlp(flp));
+        flpsEl.appendChild(row);
+      });
+    } else {
+      document.getElementById('flp-section').style.display = 'none';
+    }
+
+    const btn = document.getElementById('open-btn');
+    btn.textContent = `Open in ${currentDaw === 'ableton' ? 'Ableton Live' : 'FL Studio'}`;
+    btn.disabled = !activeProject.main_flp;
+    btn.onclick = () => activeProject.main_flp && openFlp(activeProject.main_flp);
+
+    // Hide button
+    const hideBtn = document.getElementById('hide-btn');
+    const isHidden = meta.hidden || false;
+    hideBtn.textContent = isHidden ? 'Unhide this project' : 'Hide from project browser';
+    hideBtn.className = isHidden ? 'unhide' : '';
+
+    document.getElementById('modal-overlay').classList.add('open');
+  }
+
+  function toggleHideProject() {
+    if (!activeProject) return;
+    const isHidden = getMeta(activeProject.name).hidden || false;
+    patchMeta(activeProject.name, { hidden: !isHidden });
+    refreshCard(activeProject.name);
+    closeModal();
+    updateCount();
+  }
+
+  function closeModal() {
+    if (activeProject) {
+      clearTimeout(notesTimer);
+      const notes = document.getElementById('modal-notes').value;
+      if (notes !== (getMeta(activeProject.name).notes || '')) {
+        patchMeta(activeProject.name, { notes });
+        refreshCard(activeProject.name);
+      }
+    }
+    document.getElementById('modal-overlay').classList.remove('open');
+    activeProject = null;
+  }
+
+  document.getElementById('modal-overlay').addEventListener('click', e => {
+    if (e.target === document.getElementById('modal-overlay')) closeModal();
+  });
+
+  function previewStars(n) {
+    document.querySelectorAll('#modal-stars .star').forEach((s, i) => s.classList.toggle('on', i < n));
+  }
+  function resetStarPreview() {
+    const rating = getMeta(activeProject?.name || '').rating || 0;
+    document.querySelectorAll('#modal-stars .star').forEach((s, i) => s.classList.toggle('on', i < rating));
+  }
+  function clickStar(n) {
+    if (!activeProject) return;
+    const next = getMeta(activeProject.name).rating === n ? 0 : n;
+    patchMeta(activeProject.name, { rating: next });
+    document.querySelectorAll('#modal-stars .star').forEach((s, i) => s.classList.toggle('on', i < next));
+    refreshCard(activeProject.name);
+  }
+  function pickColor(hex) {
+    if (!activeProject) return;
+    patchMeta(activeProject.name, { color: hex });
+    document.getElementById('modal-stripe').style.background = hex;
+    document.querySelectorAll('.color-dot').forEach(d => {
+      d.classList.toggle('active', d.style.backgroundColor === hexToRgb(hex));
+    });
+    refreshCard(activeProject.name);
+  }
+
+  // ── Open FL ────────────────────────────────────────────────
+  async function openFlp(path) {
+    const r = await window.pywebview.api.open_file(path);
+    toast(r.ok ? 'Opening in DAW…' : 'Error: file not found');
+  }
+
+  // ── Toast ──────────────────────────────────────────────────
+  let toastTimer;
+  function toast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2600);
+  }
+
+  // ── Helpers ────────────────────────────────────────────────
+  function hexToRgb(hex) {
+    const n = parseInt(hex.slice(1), 16);
+    return `rgb(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255})`;
+  }
+  function esc(s) {
+    return String(s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  // ── About ──────────────────────────────────────────────────
+  function openAbout()  { document.getElementById('about-overlay').classList.add('open'); }
+  function closeAbout() { document.getElementById('about-overlay').classList.remove('open'); }
+  document.getElementById('about-overlay').addEventListener('click', e => {
+    if (e.target === document.getElementById('about-overlay')) closeAbout();
+  });
+
+  // ── Load data.json ─────────────────────────────────────────
+  async function loadDataJson() {
+    const btn = document.querySelector('[onclick="loadDataJson()"]');
+    btn.textContent = 'Opening…';
+    btn.disabled = true;
+    try {
+      const result = await window.pywebview.api.load_data_file();
+      if (result.ok) {
+        metadata = result.data;
+        renderCanvas();
+        updateCount();
+        toast('Data loaded successfully');
+      } else {
+        toast('Error: ' + (result.error || 'Could not load file'));
+      }
+    } catch (e) {
+      toast('Error loading data');
+    } finally {
+      btn.textContent = 'Load Data';
+      btn.disabled = false;
+    }
+  }
+
+  document.getElementById('setup-screen').addEventListener('click', e => {
+    if (e.target === document.getElementById('setup-screen') && currentDaw) closeSetup();
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeModal(); closeAbout(); cancelReset(); if (currentDaw) closeSetup(); }
+  });
+
+  if (window.pywebview) {
+    init();
+  } else {
+    window.addEventListener('pywebviewready', init);
+  }
+</script>
+</body>
+</html>
