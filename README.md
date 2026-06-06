@@ -2,11 +2,20 @@
 
 Visual project browser for FL Studio and Ableton Live producers.
 
-**[thesong.is](https://thesong.is)** — download the app (newsletter required)
+**[thesong.is](https://thesong.is)**
 
-## What it does
+![The Song Is — canvas view](app/static/screenshot_01.png)
+![The Song Is — project detail](app/static/screenshot_02.png)
 
-Scan your projects folder, display each project as a draggable card on a freeform canvas. Rate, colour-tag, annotate, and open projects directly in FL Studio or Ableton Live. Sticky notes on the canvas. Everything persists locally — no server, no accounts, no data leaves your device.
+## Features
+
+- Scan your projects folder, display each project as a draggable card on a canvas. 
+- Rate, colour-tag, write notes about each project
+- Open projects directly from the app
+- Add sticky notes
+- Everything persists locally, no account required
+- Make a backup and export your data anytime
+- Supports FL Studio & Ableton Live 
 
 ## Running locally
 
@@ -21,13 +30,6 @@ Requires Python 3.9+.
 
 Builds are produced by GitHub Actions on tag push — see `.github/workflows/release.yml`.
 
-## Privacy
-
-- No network requests, ever
-- No login, no accounts
-- All metadata stored at `~/Library/Application Support/The Song Is/data.json` (Mac) or `%APPDATA%\The Song Is\data.json` (Windows)
-- Read-only access to your projects folder
-
 ## License
 
-MIT
+GPL v3 — see [LICENSE](LICENSE).

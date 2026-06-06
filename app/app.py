@@ -257,8 +257,14 @@ if __name__ == "__main__":
 
     if _system == "Darwin":
         try:
-            from AppKit import NSBundle
+            from AppKit import NSApplication, NSBundle, NSImage
             NSBundle.mainBundle().infoDictionary()["CFBundleName"] = "The Song Is"
+            icon_path = os.path.join(RESOURCES_DIR, "static", "favicon.svg")
+            if os.path.exists(icon_path):
+                ns_app = NSApplication.sharedApplication()
+                icon = NSImage.alloc().initWithContentsOfFile_(icon_path)
+                if icon:
+                    ns_app.setApplicationIconImage_(icon)
         except Exception:
             pass
     elif _system == "Windows":

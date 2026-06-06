@@ -3,49 +3,50 @@
 <head>
   <meta charset="UTF-8">
   <title>The Song Is</title>
+  <link rel="icon" type="image/svg+xml" href="../static/favicon.svg">
   <style>
     /* ── Theme tokens ─────────────────────────────────────── */
     :root {
-      --bg:              #f4f1ea;
-      --bg-header:       #faf8f3;
-      --bg-card:         #faf8f3;
-      --bg-modal:        #faf8f3;
+      --bg:              #f0f0f0;
+      --bg-header:       #f8f8f8;
+      --bg-card:         #f8f8f8;
+      --bg-modal:        #f8f8f8;
       --bg-input:        transparent;
       --bg-input-deep:   transparent;
-      --bg-flp-row:      #f4f1ea;
-      --bg-close-btn:    #ece8de;
+      --bg-flp-row:      #f0f0f0;
+      --bg-close-btn:    #ebebeb;
 
-      --border:          #d6d0c4;
-      --border-card:     #d6d0c4;
-      --border-card-hover: #a8a296;
-      --border-input:    #c8c2b4;
-      --border-modal:    #d6d0c4;
-      --border-flp-row:  #d6d0c4;
-      --border-reset:    #c8c2b4;
+      --border:          #d8d8d8;
+      --border-card:     #d8d8d8;
+      --border-card-hover: #a8a8a8;
+      --border-input:    #c8c8c8;
+      --border-modal:    #d8d8d8;
+      --border-flp-row:  #d8d8d8;
+      --border-reset:    #c8c8c8;
 
-      --text:            #2c2820;
-      --text-dim:        #9a9288;
-      --text-card-title: #2c2820;
-      --text-card-date:  #a8a298;
-      --text-card-notes: #6e6860;
-      --text-modal-title:#1c1810;
-      --text-input:      #2c2820;
-      --text-flp:        #3c3830;
-      --text-reset:      #9a9288;
-      --text-label:      #b0aa9e;
+      --text:            #252525;
+      --text-dim:        #929292;
+      --text-card-title: #252525;
+      --text-card-date:  #a0a0a0;
+      --text-card-notes: #686868;
+      --text-modal-title:#181818;
+      --text-input:      #252525;
+      --text-flp:        #363636;
+      --text-reset:      #929292;
+      --text-label:      #ababab;
 
-      --star-off:        #d6d0c4;
-      --canvas-dot:      #ccc8bc;
-      --shadow-card:     rgba(44,36,24,0.07);
-      --shadow-drag:     rgba(44,36,24,0.16);
-      --modal-overlay:   rgba(44,36,24,0.35);
+      --star-off:        #d8d8d8;
+      --canvas-dot:      #c8c8c8;
+      --shadow-card:     rgba(0,0,0,0.07);
+      --shadow-drag:     rgba(0,0,0,0.16);
+      --modal-overlay:   rgba(0,0,0,0.30);
 
-      --toast-bg:        #faf8f3;
-      --toast-border:    #d6d0c4;
-      --toast-text:      #2c2820;
+      --toast-bg:        #f8f8f8;
+      --toast-border:    #d8d8d8;
+      --toast-text:      #252525;
 
-      --open-disabled-bg:    #e8e4da;
-      --open-disabled-color: #b0aa9e;
+      --open-disabled-bg:    #e4e4e4;
+      --open-disabled-color: #ababab;
 
       --accent:          #6b8f71;
       --accent-hover:    #5a7d60;
@@ -54,46 +55,46 @@
     }
 
     [data-theme="dark"] {
-      --bg:              #1c1a15;
-      --bg-header:       #222018;
-      --bg-card:         #252219;
-      --bg-modal:        #252219;
+      --bg:              #1a1a1a;
+      --bg-header:       #202020;
+      --bg-card:         #222222;
+      --bg-modal:        #222222;
       --bg-input:        transparent;
       --bg-input-deep:   transparent;
-      --bg-flp-row:      #1c1a15;
-      --bg-close-btn:    #2e2b20;
+      --bg-flp-row:      #1a1a1a;
+      --bg-close-btn:    #2c2c2c;
 
-      --border:          #373320;
-      --border-card:     #373320;
-      --border-card-hover: #504c38;
-      --border-input:    #3e3a28;
-      --border-modal:    #373320;
-      --border-flp-row:  #373320;
-      --border-reset:    #3e3a28;
+      --border:          #333333;
+      --border-card:     #333333;
+      --border-card-hover: #4c4c4c;
+      --border-input:    #3a3a3a;
+      --border-modal:    #333333;
+      --border-flp-row:  #333333;
+      --border-reset:    #3a3a3a;
 
-      --text:            #d8d3c8;
-      --text-dim:        #685e50;
-      --text-card-title: #d8d3c8;
-      --text-card-date:  #5a5648;
-      --text-card-notes: #7a7468;
-      --text-modal-title:#e4dfd4;
-      --text-input:      #d8d3c8;
-      --text-flp:        #b8b2a8;
-      --text-reset:      #685e50;
-      --text-label:      #4e4a38;
+      --text:            #d4d4d4;
+      --text-dim:        #626262;
+      --text-card-title: #d4d4d4;
+      --text-card-date:  #565656;
+      --text-card-notes: #727272;
+      --text-modal-title:#e0e0e0;
+      --text-input:      #d4d4d4;
+      --text-flp:        #b4b4b4;
+      --text-reset:      #626262;
+      --text-label:      #484848;
 
-      --star-off:        #373320;
-      --canvas-dot:      #2a2820;
+      --star-off:        #333333;
+      --canvas-dot:      #282828;
       --shadow-card:     rgba(0,0,0,0.4);
       --shadow-drag:     rgba(0,0,0,0.6);
       --modal-overlay:   rgba(0,0,0,0.6);
 
-      --toast-bg:        #252219;
-      --toast-border:    #373320;
-      --toast-text:      #d8d3c8;
+      --toast-bg:        #222222;
+      --toast-border:    #333333;
+      --toast-text:      #d4d4d4;
 
-      --open-disabled-bg:    #2e2b20;
-      --open-disabled-color: #4e4a38;
+      --open-disabled-bg:    #2c2c2c;
+      --open-disabled-color: #484848;
 
       --accent:          #7a9e80;
       --accent-hover:    #6a8e70;
@@ -121,7 +122,7 @@
       display: flex;
       align-items: center;
       padding: 0 20px;
-      gap: 10px;
+      gap: 16px;
       z-index: 200;
       transition: background 0.2s, border-color 0.2s;
     }
@@ -162,12 +163,64 @@
       color: var(--text-dim);
       white-space: nowrap;
       flex-shrink: 0;
+      width: 72px;
+      text-align: right;
     }
 
     #search-wrap {
       position: relative;
       display: flex;
       align-items: center;
+      align-self: stretch;
+    }
+
+    #search-results {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      min-width: 300px;
+      background: var(--bg-modal);
+      border: 1px solid var(--border-modal);
+      border-top: none;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.14);
+      z-index: 300;
+      max-height: 340px;
+      overflow-y: auto;
+    }
+    #search-results.open { display: block; }
+
+    .search-result {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      cursor: pointer;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.1s;
+    }
+    .search-result:last-child { border-bottom: none; }
+    .search-result:hover { background: var(--bg-flp-row); }
+    .search-result-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .search-result-name {
+      flex: 1;
+      font-size: 13px;
+      color: var(--text);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .search-result-stars { font-size: 9px; color: var(--star-off); flex-shrink: 0; }
+    .search-result-stars .on { color: #ffc107; }
+    .search-no-results {
+      padding: 12px;
+      font-size: 12px;
+      color: var(--text-dim);
+      text-align: center;
     }
     #search-clear {
       position: absolute;
@@ -187,7 +240,7 @@
     .hdr-btn {
       background: none;
       border: 1px solid var(--border-reset);
-      border-radius: 6px;
+      border-radius: 0;
       color: var(--text-reset);
       font-size: 12px;
       padding: 5px 10px;
@@ -204,86 +257,20 @@
       color: #fff;
     }
 
-    #theme-btn {
+    .icon-btn {
       background: none;
       border: 1px solid var(--border-reset);
-      border-radius: 6px;
+      border-radius: 0;
       color: var(--text-reset);
-      font-size: 15px;
       width: 32px; height: 30px;
       display: flex; align-items: center; justify-content: center;
       cursor: pointer;
       transition: color 0.15s, border-color 0.15s;
       flex-shrink: 0;
-      margin-left: auto;
     }
-    #theme-btn:hover { color: var(--text); border-color: var(--text-dim); }
+    .icon-btn:hover { color: var(--text); border-color: var(--text-dim); }
+    .icon-btn svg { pointer-events: none; }
 
-    /* ── About modal ──────────────────────────────────────────── */
-    #about-overlay {
-      display: none;
-      position: fixed; inset: 0;
-      background: var(--modal-overlay);
-      backdrop-filter: blur(6px);
-      z-index: 500;
-      align-items: center; justify-content: center;
-    }
-    #about-overlay.open { display: flex; }
-
-    #about-modal {
-      background: var(--bg-modal);
-      border: 1px solid var(--border-modal);
-      border-radius: 14px;
-      width: 620px;
-      padding: 36px 36px 32px;
-      position: relative;
-      animation: popIn 0.18s ease;
-      text-align: center;
-    }
-
-    #about-modal img {
-      width: 55%;
-      max-width: 320px;
-      height: auto;
-      margin-bottom: 10px;
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    #about-by {
-      font-size: 11px;
-      color: var(--text-dim);
-      margin-bottom: 18px;
-    }
-    #about-by a {
-      color: var(--text-dim);
-      text-decoration: none;
-    }
-    #about-by a:hover { text-decoration: underline; }
-
-    #about-content {
-      font-size: 13px;
-      color: var(--text-dim);
-      line-height: 1.65;
-      margin-top: 14px;
-    }
-
-    #about-content a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-    #about-content a:hover { text-decoration: underline; }
-
-    #about-close {
-      position: absolute; top: 14px; right: 14px;
-      background: var(--bg-close-btn); border: none;
-      color: var(--text-dim); font-size: 16px;
-      width: 28px; height: 28px; border-radius: 50%;
-      cursor: pointer; display: flex; align-items: center; justify-content: center;
-      transition: background 0.15s, color 0.15s;
-    }
-    #about-close:hover { background: var(--border-input); color: var(--text); }
 
     /* ── Canvas ───────────────────────────────────────────── */
     #canvas-wrap {
@@ -306,10 +293,14 @@
     #canvas-wrap::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
     #canvas-wrap::-webkit-scrollbar-corner { background: var(--bg); }
 
-    #canvas {
+    #canvas-sizer {
       position: relative;
-      min-width: 100%;
-      min-height: 100%;
+    }
+
+    #canvas {
+      position: absolute;
+      top: 0; left: 0;
+      transform-origin: 0 0;
     }
 
     /* ── Project Cards ────────────────────────────────────── */
@@ -500,7 +491,6 @@
     }
     #modal-close:hover { background: var(--border-input); color: var(--text); }
 
-    #modal-stripe { height: 6px; border-radius: 4px; margin-bottom: 20px; transition: background 0.2s; }
 
     #modal-title {
       font-size: 19px; font-weight: 700;
@@ -576,14 +566,14 @@
     #hide-btn:hover { color: #e74c3c; border-color: #e74c3c; }
     #hide-btn.unhide:hover { color: var(--accent); border-color: var(--accent); }
 
-    /* ── Setup screen ─────────────────────────────────────── */
+    /* ── Setup screen / Settings ──────────────────────────── */
     #setup-screen {
       display: none;
       position: fixed; inset: 0;
-      background: var(--bg);
+      background: var(--modal-overlay);
+      backdrop-filter: blur(6px);
       z-index: 600;
       align-items: center; justify-content: center;
-      transition: background 0.2s;
     }
     #setup-screen.open { display: flex; }
 
@@ -591,7 +581,9 @@
       background: var(--bg-modal);
       border: 1px solid var(--border-modal);
       border-radius: 16px;
-      width: 520px;
+      width: 560px;
+      max-height: 88vh;
+      overflow-y: auto;
       padding: 40px 40px 36px;
       animation: popIn 0.2s ease;
       position: relative;
@@ -615,12 +607,89 @@
       margin-bottom: 8px;
     }
 
-    #setup-card p {
+    #setup-desc {
       font-size: 14px;
       color: var(--text-dim);
       line-height: 1.55;
       margin-bottom: 28px;
     }
+
+    .settings-section {
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+    .settings-section-title {
+      font-size: 10px; font-weight: 700; color: var(--text-label);
+      text-transform: uppercase; letter-spacing: 1px;
+      margin-bottom: 14px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .info-tip {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 13px; height: 13px; border-radius: 50%;
+      font-size: 8px; font-weight: 700;
+      color: var(--text-dim); border: 1px solid var(--border-reset);
+      cursor: help;
+      text-transform: none; letter-spacing: 0; flex-shrink: 0;
+    }
+    .accent-swatches {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .accent-swatch {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      outline: 2px solid transparent;
+      outline-offset: 2px;
+      transition: outline-color 0.15s, transform 0.1s;
+      flex-shrink: 0;
+    }
+    .accent-swatch:hover { transform: scale(1.15); }
+    .accent-swatch.active { outline-color: var(--text); }
+
+    #tip {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      background: var(--bg-modal);
+      border: 1px solid var(--border-modal);
+      border-radius: 6px;
+      padding: 7px 11px;
+      font-size: 11px; font-weight: 400;
+      color: var(--text-dim);
+      max-width: 240px;
+      pointer-events: none;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.14);
+      line-height: 1.5;
+      text-transform: none; letter-spacing: 0;
+    }
+    .settings-row {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      cursor: pointer; padding: 2px 0;
+    }
+    .settings-row-label { font-size: 13px; color: var(--text); }
+    #settings-show-hidden-cb {
+      width: 16px; height: 16px;
+      accent-color: var(--accent); cursor: pointer;
+    }
+    .settings-btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .settings-about { text-align: center; padding-top: 4px; }
+    .settings-about img {
+      width: 55%; max-width: 200px; height: auto;
+      margin: 0 auto 8px; display: block;
+    }
+    .settings-about-by {
+      font-size: 11px; color: var(--text-dim); margin-bottom: 12px;
+    }
+    .settings-about-by a { color: var(--text-dim); text-decoration: none; }
+    .settings-about-links { font-size: 13px; color: var(--text-dim); line-height: 1.65; }
+    .settings-about-links a { color: var(--accent); text-decoration: none; }
+    .settings-about-links a:hover { text-decoration: underline; }
 
     .setup-label {
       font-size: 10px; font-weight: 700; color: var(--text-label);
@@ -732,6 +801,41 @@
       flex-shrink: 0;
     }
 
+    #zoom-controls {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--border-reset);
+      border-radius: 0;
+      overflow: hidden;
+      flex-shrink: 0;
+      height: 30px;
+    }
+    .zoom-btn {
+      background: none;
+      border: none;
+      color: var(--text-reset);
+      font-size: 15px;
+      width: 27px; height: 30px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: color 0.15s, background 0.15s;
+      flex-shrink: 0;
+    }
+    .zoom-btn:hover { color: var(--text); background: rgba(128,128,128,0.08); }
+    #zoom-label {
+      font-size: 11px;
+      font-family: var(--font-mono);
+      color: var(--text-dim);
+      padding: 0 5px;
+      border-left: 1px solid var(--border-reset);
+      border-right: 1px solid var(--border-reset);
+      white-space: nowrap;
+      min-width: 38px;
+      text-align: center;
+      line-height: 30px;
+      height: 30px;
+    }
+
     /* ── Reset modal ──────────────────────────────────────── */
     #reset-overlay {
       display: none;
@@ -790,6 +894,49 @@
       transition: color 0.15s, border-color 0.15s;
     }
     #reset-cancel-btn:hover { color: var(--text); border-color: var(--text-dim); }
+
+    #hide-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: var(--modal-overlay);
+      backdrop-filter: blur(6px);
+      z-index: 500;
+      align-items: center; justify-content: center;
+    }
+    #hide-overlay.open { display: flex; }
+    #hide-modal {
+      background: var(--bg-modal);
+      border: 1px solid var(--border-modal);
+      border-radius: 14px;
+      width: 380px;
+      padding: 32px 32px 28px;
+      position: relative;
+      animation: popIn 0.18s ease;
+      text-align: center;
+    }
+    #hide-modal h3 { font-size: 17px; font-weight: 700; color: var(--text-modal-title); margin-bottom: 10px; }
+    #hide-modal p  { font-size: 13px; color: var(--text-dim); line-height: 1.55; margin-bottom: 24px; }
+    #hide-modal .hide-actions { display: flex; flex-direction: column; gap: 8px; }
+    #hide-confirm-btn {
+      width: 100%; padding: 12px;
+      background: #e74c3c; color: #fff;
+      border: none; border-radius: 8px;
+      font-size: 14px; font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+    }
+    #hide-confirm-btn:hover  { background: #c0392b; }
+    #hide-confirm-btn:active { transform: scale(0.98); }
+    #hide-cancel-btn {
+      width: 100%; padding: 10px;
+      background: none;
+      border: 1px solid var(--border-input);
+      border-radius: 8px;
+      color: var(--text-dim); font-size: 13px;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    #hide-cancel-btn:hover { color: var(--text); border-color: var(--text-dim); }
   </style>
 </head>
 <body>
@@ -801,50 +948,95 @@
   <div id="search-wrap">
     <input id="search" type="text" placeholder="Search projects…" autocomplete="off">
     <button id="search-clear" onclick="clearSearch()" title="Clear">×</button>
+    <div id="search-results"></div>
   </div>
-  <div class="hdr-divider"></div>
+  <div id="zoom-controls">
+    <button class="zoom-btn" onclick="zoomOut()" title="Zoom out">−</button>
+    <span id="zoom-label">100%</span>
+    <button class="zoom-btn" onclick="zoomIn()" title="Zoom in">+</button>
+  </div>
+  <button class="hdr-btn" onclick="centerView()" title="Snap to center">⊙ Center</button>
   <button class="hdr-btn" onclick="addSticky()">+ Sticky Note</button>
-  <button class="hdr-btn" id="show-hidden-btn" onclick="toggleShowHidden()">Show Hidden</button>
-  <button class="hdr-btn" onclick="beginReset()">Reset Layout</button>
-  <button class="hdr-btn" onclick="exportData()">Export Data</button>
-  <button class="hdr-btn" onclick="loadDataJson()" title="Load a saved data.json backup">Load Data</button>
-  <button class="hdr-btn" onclick="openSetup()" title="Change DAW or projects folder">Settings</button>
-  <button class="hdr-btn" id="about-btn" onclick="openAbout()">About App</button>
-  <button id="theme-btn" onclick="toggleTheme()" title="Toggle light/dark mode">🌙</button>
+  <div style="flex:1"></div>
+  <button class="icon-btn" id="settings-btn" onclick="openSetup()" title="Settings"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+  <button class="icon-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle light/dark mode"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
 </div>
 
 <div id="canvas-wrap">
-  <div id="canvas"></div>
+  <div id="canvas-sizer">
+    <div id="canvas"></div>
+  </div>
 </div>
 
-<!-- Setup screen -->
+<!-- Setup screen / Settings -->
 <div id="setup-screen">
   <div id="setup-card">
     <button id="setup-close" onclick="closeSetup()">✕</button>
-    <h2 id="setup-heading">Welcome to The Song Is</h2>
+    <h2 id="setup-heading">Settings</h2>
     <p id="setup-desc">Select your DAW, then point the app at your projects folder.</p>
 
-    <div class="setup-label">Your DAW</div>
-    <div id="daw-picker">
-      <div class="daw-opt" data-daw="fl_studio" onclick="selectDaw('fl_studio')">
-        <div class="daw-opt-name">FL Studio</div>
-        <div class="daw-opt-ext">.flp files</div>
+    <div class="settings-section" style="border-top:none; margin-top:0; padding-top:0">
+      <div class="settings-section-title">DAW &amp; Projects Folder <span class="info-tip" data-tip="Choose your DAW so the app knows which file types to scan for (.flp for FL Studio, .als for Ableton Live).">?</span></div>
+      <div id="daw-picker">
+        <div class="daw-opt" data-daw="fl_studio" onclick="selectDaw('fl_studio')">
+          <div class="daw-opt-name">FL Studio</div>
+          <div class="daw-opt-ext">.flp files</div>
+        </div>
+        <div class="daw-opt" data-daw="ableton" onclick="selectDaw('ableton')">
+          <div class="daw-opt-name">Ableton Live</div>
+          <div class="daw-opt-ext">.als files</div>
+        </div>
       </div>
-      <div class="daw-opt" data-daw="ableton" onclick="selectDaw('ableton')">
-        <div class="daw-opt-name">Ableton Live</div>
-        <div class="daw-opt-ext">.als files</div>
+
+      <div id="setup-folder-section" style="display:none">
+        <div class="setup-label" style="margin-top:18px">Projects Folder</div>
+        <div id="setup-path-row">
+          <input id="setup-path" type="text" placeholder="Path to your projects folder…" oninput="onSetupPathInput()">
+          <button id="setup-browse-btn" onclick="browseFolder()">Browse…</button>
+        </div>
+        <div id="setup-path-hint"></div>
+        <button id="setup-save-btn" onclick="saveFolder()" disabled>Open Browser</button>
       </div>
     </div>
 
-    <div id="setup-folder-section" style="display:none">
-      <div class="setup-label">Projects Folder</div>
-      <div id="setup-path-row">
-        <input id="setup-path" type="text" placeholder="Path to your projects folder…" oninput="onSetupPathInput()">
-        <button id="setup-browse-btn" onclick="browseFolder()">Browse…</button>
+    <div id="settings-extras">
+      <div class="settings-section">
+        <div class="settings-section-title">Appearance <span class="info-tip" data-tip="Choose an accent color used for buttons, highlights and interactive elements throughout the app.">?</span></div>
+        <div class="accent-swatches" id="accent-swatches"></div>
       </div>
-      <div id="setup-path-hint"></div>
 
-      <button id="setup-save-btn" onclick="saveFolder()" disabled>Open Browser</button>
+      <div class="settings-section">
+        <div class="settings-section-title">Library <span class="info-tip" data-tip="Hidden projects are excluded from the canvas view. Enable to show them at reduced opacity without deleting them.">?</span></div>
+        <label class="settings-row" for="settings-show-hidden-cb">
+          <span class="settings-row-label">Show hidden projects</span>
+          <input type="checkbox" id="settings-show-hidden-cb" onchange="toggleShowHidden()">
+        </label>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">Data <span class="info-tip" data-tip="Export saves all ratings, notes, colors and card positions to a .json file. Load restores from a previous export.">?</span></div>
+        <div class="settings-btn-row">
+          <button class="hdr-btn" onclick="exportData()">Export Data</button>
+          <button class="hdr-btn" onclick="loadDataJson()">Load Data</button>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">Layout <span class="info-tip" data-tip="Resets all card positions to a default grid. Ratings, notes, colors and stickies are not affected.">?</span></div>
+        <button class="hdr-btn" onclick="closeSetup(); beginReset();">Reset Layout…</button>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">About</div>
+        <div class="settings-about">
+          <img src="../static/logo.svg" alt="The Song Is">
+          <p class="settings-about-by">Hobby project by <a href="https://problem-industries.com" target="_blank" rel="noopener">problem-industries.com</a></p>
+          <div class="settings-about-links">
+            <p><a href="https://github.com/problemindustries/the-song-is" target="_blank" rel="noopener">View source code, send bug reports and suggestions on GitHub.</a></p>
+            <p>Thanks for using my program!</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -853,7 +1045,6 @@
 <div id="modal-overlay">
   <div id="modal">
     <button id="modal-close" onclick="closeModal()">✕</button>
-    <div id="modal-stripe"></div>
     <div id="modal-title"></div>
 
     <div class="section">
@@ -881,31 +1072,6 @@
   </div>
 </div>
 
-<!-- About modal -->
-<div id="about-overlay">
-  <div id="about-modal">
-    <button id="about-close" onclick="closeAbout()">✕</button>
-    <img src="../static/logo.svg" alt="The Song Is">
-    <p id="about-by">by <a href="https://problem-industries.com" target="_blank" rel="noopener">problem-industries.com</a></p>
-
-    <div id="about-content">
-      <p>
-        <a href="https://thesong.is" target="_blank">Visit thesong.is</a> for more information.
-      </p>
-
-      <p style="margin-top: 16px;">
-        Source code available on<br>
-        <a href="https://github.com/problemindustries/the-song-is" target="_blank">github.com/problemindustries/the-song-is</a>
-      </p>
-
-      <p style="margin-top: 16px;">
-        Bugs, feature suggestions, feedback<br>
-        <a href="mailto:problem.industries@gmail.com">problem.industries@gmail.com</a>
-      </p>
-    </div>
-
-  </div>
-</div>
 
 <!-- Reset confirm modal -->
 <div id="reset-overlay">
@@ -919,7 +1085,20 @@
   </div>
 </div>
 
+<!-- Hide confirm modal -->
+<div id="hide-overlay">
+  <div id="hide-modal">
+    <h3>Hide this project?</h3>
+    <p>The project will be hidden from the canvas. You can show it again by enabling "Show hidden projects" in Settings.</p>
+    <div class="hide-actions">
+      <button id="hide-confirm-btn" onclick="confirmHide()">Hide project</button>
+      <button id="hide-cancel-btn"  onclick="cancelHide()">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
+<div id="tip"></div>
 
 <script>
   // ── Constants ──────────────────────────────────────────────
@@ -958,17 +1137,80 @@
   let defaultDirs = {};     // { fl_studio: '...', ableton: '...' }
 
   // Drag (shared for cards + stickies)
+  let canvasZoom = 1.0;
+
   let dragEl = null, dragOffX = 0, dragOffY = 0;
   let dragStartX = 0, dragStartY = 0, didDrag = false;
 
   // ── Theme ──────────────────────────────────────────────────
+  const ICON_MOON = `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
+  const ICON_SUN  = `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`;
+
+  const ACCENTS = [
+    { name: 'Sage',    light: '#6b8f71', dark: '#7a9e80' },
+    { name: 'Teal',    light: '#5a8f8a', dark: '#6a9e99' },
+    { name: 'Blue',    light: '#5a7a9e', dark: '#6a8aae' },
+    { name: 'Indigo',  light: '#6a6a9e', dark: '#7a7aae' },
+    { name: 'Purple',  light: '#8a6a9e', dark: '#9a7aae' },
+    { name: 'Mauve',   light: '#9e6a7a', dark: '#ae7a8a' },
+    { name: 'Rose',    light: '#9e5a5a', dark: '#ae6e6e' },
+    { name: 'Amber',   light: '#9e7a52', dark: '#ae8a62' },
+  ];
+
+  function darkenHex(hex, amt) {
+    return '#' + [1,3,5].map(i =>
+      Math.max(0, parseInt(hex.slice(i, i+2), 16) - amt).toString(16).padStart(2,'0')
+    ).join('');
+  }
+
+  function mixColors(base, accent, t) {
+    const p = h => [1,3,5].map(i => parseInt(h.slice(i,i+2),16));
+    const [br,bg,bb] = p(base);
+    const [ar,ag,ab] = p(accent);
+    return '#' + [
+      Math.round(br*(1-t)+ar*t),
+      Math.round(bg*(1-t)+ag*t),
+      Math.round(bb*(1-t)+ab*t),
+    ].map(v => v.toString(16).padStart(2,'0')).join('');
+  }
+
+  function applyAccent(name) {
+    const a = ACCENTS.find(x => x.name === name) || ACCENTS[0];
+    const theme = document.documentElement.getAttribute('data-theme') || 'light';
+    const color = a[theme] || a.light;
+    const baseHeader = theme === 'dark' ? '#202020' : '#f8f8f8';
+    document.documentElement.style.setProperty('--accent', color);
+    document.documentElement.style.setProperty('--accent-hover', darkenHex(color, 14));
+    document.documentElement.style.setProperty('--bg-header', mixColors(baseHeader, color, theme === 'dark' ? 0.10 : 0.07));
+    localStorage.setItem('accent_name', name);
+    document.querySelectorAll('.accent-swatch').forEach(s =>
+      s.classList.toggle('active', s.dataset.accent === name)
+    );
+  }
+
+  function renderAccentSwatches() {
+    const wrap = document.getElementById('accent-swatches');
+    if (!wrap) return;
+    const current = localStorage.getItem('accent_name') || 'Sage';
+    const theme = document.documentElement.getAttribute('data-theme') || 'light';
+    wrap.innerHTML = ACCENTS.map(a =>
+      `<div class="accent-swatch${a.name === current ? ' active' : ''}"
+        data-accent="${a.name}"
+        style="background:${a[theme] || a.light}"
+        title="${a.name}"
+        onclick="applyAccent('${a.name}')"></div>`
+    ).join('');
+  }
+
   function applyTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
-    document.getElementById('theme-btn').textContent = theme === 'dark' ? '☀️' : '🌙';
+    document.getElementById('theme-btn').innerHTML = theme === 'dark' ? ICON_SUN : ICON_MOON;
     document.getElementById('app-logo').src = theme === 'dark'
       ? '../static/logo_dark.svg'
       : '../static/logo_light.svg';
     localStorage.setItem('theme', theme);
+    applyAccent(localStorage.getItem('accent_name') || 'Sage');
+    renderAccentSwatches();
   }
   function toggleTheme() {
     applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
@@ -977,6 +1219,7 @@
   // ── Init ───────────────────────────────────────────────────
   async function init() {
     applyTheme(localStorage.getItem('theme') || 'light');
+    applyAccent(localStorage.getItem('accent_name') || 'Sage');
 
     const config = await window.pywebview.api.get_config();
     defaultDirs = config.default_dirs || {};
@@ -1006,16 +1249,19 @@
   function openSetup() {
     const isFirstLaunch = !currentDaw;
 
-    // Set context-appropriate copy
     document.getElementById('setup-heading').textContent = isFirstLaunch
       ? 'Welcome to The Song Is'
-      : 'settings';
-    document.getElementById('setup-desc').textContent = isFirstLaunch
-      ? 'Select your DAW, then point the app at your projects folder.'
-      : 'Change your DAW or projects folder. Your current settings are pre-filled below.';
+      : 'Settings';
+    document.getElementById('setup-desc').style.display = isFirstLaunch ? '' : 'none';
+    document.getElementById('settings-extras').style.display = isFirstLaunch ? 'none' : '';
     document.getElementById('setup-save-btn').textContent = isFirstLaunch
       ? 'Open Browser'
       : 'Save Changes';
+
+    const cb = document.getElementById('settings-show-hidden-cb');
+    if (cb) cb.checked = showHidden;
+
+    renderAccentSwatches();
 
     // Pre-select current DAW
     selectedDaw = currentDaw;
@@ -1200,11 +1446,16 @@
     if (e.target === document.getElementById('reset-overlay')) cancelReset();
   });
 
+  document.getElementById('hide-overlay').addEventListener('click', e => {
+    if (e.target === document.getElementById('hide-overlay')) cancelHide();
+  });
+
   // ── Canvas sizing ──────────────────────────────────────────
   function fitCanvas() {
     requestAnimationFrame(() => {
       const wrap   = document.getElementById('canvas-wrap');
       const canvas = document.getElementById('canvas');
+      const sizer  = document.getElementById('canvas-sizer');
       const EXTRA  = 360;
       let maxX = 0, maxY = 0;
       document.querySelectorAll('.card, .sticky').forEach(el => {
@@ -1214,8 +1465,13 @@
         maxX = Math.max(maxX, x + (el.offsetWidth  || CARD_W));
         maxY = Math.max(maxY, y + (el.offsetHeight || CARD_H));
       });
-      canvas.style.width  = Math.max(wrap.clientWidth,  maxX + EXTRA) + 'px';
-      canvas.style.height = Math.max(wrap.clientHeight, maxY + EXTRA) + 'px';
+      const contentW = Math.max(wrap.clientWidth / canvasZoom, maxX + EXTRA);
+      const contentH = Math.max(wrap.clientHeight / canvasZoom, maxY + EXTRA);
+      canvas.style.width  = contentW + 'px';
+      canvas.style.height = contentH + 'px';
+      canvas.style.transform = `scale(${canvasZoom})`;
+      sizer.style.width  = Math.max(wrap.clientWidth,  contentW * canvasZoom) + 'px';
+      sizer.style.height = Math.max(wrap.clientHeight, contentH * canvasZoom) + 'px';
     });
   }
 
@@ -1231,7 +1487,8 @@
   // ── Show hidden toggle ─────────────────────────────────────
   function toggleShowHidden() {
     showHidden = !showHidden;
-    document.getElementById('show-hidden-btn').classList.toggle('active', showHidden);
+    const cb = document.getElementById('settings-show-hidden-cb');
+    if (cb) cb.checked = showHidden;
     document.querySelectorAll('.card').forEach(c => {
       const hidden = getMeta(c.dataset.name).hidden;
       if (hidden) c.style.display = showHidden ? '' : 'none';
@@ -1298,8 +1555,8 @@
       id,
       text: '',
       color: STICKY_COLORS[0],
-      x: wrap.scrollLeft + 40,
-      y: wrap.scrollTop  + 40,
+      x: (wrap.scrollLeft + 40) / canvasZoom,
+      y: (wrap.scrollTop  + 40) / canvasZoom,
       zIndex: ++topZ,
     };
     const arr = getStickies();
@@ -1400,8 +1657,8 @@
     dragStartY = e.clientY;
 
     const rect = el.getBoundingClientRect();
-    dragOffX = e.clientX - rect.left;
-    dragOffY = e.clientY - rect.top;
+    dragOffX = (e.clientX - rect.left) / canvasZoom;
+    dragOffY = (e.clientY - rect.top)  / canvasZoom;
 
     topZ++;
     el.style.zIndex = topZ;
@@ -1417,8 +1674,8 @@
     dragEl.classList.add('dragging');
     const wrap = document.getElementById('canvas-wrap');
     const r = wrap.getBoundingClientRect();
-    const x = e.clientX - r.left + wrap.scrollLeft - dragOffX;
-    const y = e.clientY - r.top  + wrap.scrollTop  - dragOffY;
+    const x = (e.clientX - r.left + wrap.scrollLeft) / canvasZoom - dragOffX;
+    const y = (e.clientY - r.top  + wrap.scrollTop)  / canvasZoom - dragOffY;
     dragEl.style.left = Math.max(0, x) + 'px';
     dragEl.style.top  = Math.max(0, y) + 'px';
   });
@@ -1450,6 +1707,35 @@
     fitCanvas();
   });
 
+  // ── Middle-click pan ───────────────────────────────────────
+  (function () {
+    const wrap = document.getElementById('canvas-wrap');
+    let panning = false, panStartX = 0, panStartY = 0, scrollStartX = 0, scrollStartY = 0;
+
+    wrap.addEventListener('mousedown', e => {
+      if (e.button !== 1) return;
+      e.preventDefault();
+      panning = true;
+      panStartX = e.clientX;
+      panStartY = e.clientY;
+      scrollStartX = wrap.scrollLeft;
+      scrollStartY = wrap.scrollTop;
+      wrap.style.cursor = 'grabbing';
+    });
+
+    document.addEventListener('mousemove', e => {
+      if (!panning) return;
+      wrap.scrollLeft = scrollStartX - (e.clientX - panStartX);
+      wrap.scrollTop  = scrollStartY - (e.clientY - panStartY);
+    });
+
+    document.addEventListener('mouseup', e => {
+      if (e.button !== 1 || !panning) return;
+      panning = false;
+      wrap.style.cursor = '';
+    });
+  })();
+
   // ── Search ─────────────────────────────────────────────────
   document.getElementById('search').addEventListener('input', function () {
     document.getElementById('search-clear').style.display = this.value ? 'block' : 'none';
@@ -1464,14 +1750,57 @@
     });
     document.getElementById('project-count').textContent =
       `${count} project${count !== 1 ? 's' : ''}`;
+    showSearchResults(q);
+  });
+
+  function showSearchResults(q) {
+    const el = document.getElementById('search-results');
+    if (!q) { el.classList.remove('open'); el.innerHTML = ''; return; }
+    const matches = projects
+      .filter(p => {
+        if (!showHidden && getMeta(p.name).hidden) return false;
+        return p.name.toLowerCase().includes(q);
+      })
+      .slice(0, 12);
+    if (!matches.length) {
+      el.innerHTML = '<div class="search-no-results">No projects found</div>';
+    } else {
+      el.innerHTML = matches.map(p => {
+        const meta   = getMeta(p.name);
+        const color  = meta.color || COLORS[0].hex;
+        const rating = meta.rating || 0;
+        const stars  = Array.from({ length: 5 }, (_, i) =>
+          `<span class="${i < rating ? 'on' : ''}">★</span>`
+        ).join('');
+        return `<div class="search-result" data-name="${esc(p.name)}">
+          <span class="search-result-dot" style="background:${color}"></span>
+          <span class="search-result-name">${esc(p.name)}</span>
+          <span class="search-result-stars">${stars}</span>
+        </div>`;
+      }).join('');
+      el.querySelectorAll('.search-result').forEach(row => {
+        row.addEventListener('click', () => {
+          openModal(row.dataset.name);
+          clearSearch();
+        });
+      });
+    }
+    el.classList.add('open');
+  }
+
+  document.addEventListener('click', e => {
+    if (!document.getElementById('search-wrap').contains(e.target)) {
+      document.getElementById('search-results').classList.remove('open');
+    }
   });
 
   function clearSearch() {
     const input = document.getElementById('search');
     input.value = '';
     document.getElementById('search-clear').style.display = 'none';
+    document.getElementById('search-results').classList.remove('open');
+    document.getElementById('search-results').innerHTML = '';
     input.dispatchEvent(new Event('input'));
-    input.focus();
   }
 
   function updateCount() {
@@ -1489,7 +1818,6 @@
     const rating = meta.rating || 0;
 
     document.getElementById('modal-title').textContent = name;
-    document.getElementById('modal-stripe').style.background = color;
 
     // Stars
     const starsEl = document.getElementById('modal-stars');
@@ -1558,10 +1886,29 @@
   function toggleHideProject() {
     if (!activeProject) return;
     const isHidden = getMeta(activeProject.name).hidden || false;
-    patchMeta(activeProject.name, { hidden: !isHidden });
+    if (isHidden) {
+      // Unhide immediately — no confirmation needed
+      patchMeta(activeProject.name, { hidden: false });
+      refreshCard(activeProject.name);
+      closeModal();
+      updateCount();
+    } else {
+      // Hiding — ask for confirmation
+      document.getElementById('hide-overlay').classList.add('open');
+    }
+  }
+
+  function confirmHide() {
+    if (!activeProject) return;
+    patchMeta(activeProject.name, { hidden: true });
     refreshCard(activeProject.name);
+    document.getElementById('hide-overlay').classList.remove('open');
     closeModal();
     updateCount();
+  }
+
+  function cancelHide() {
+    document.getElementById('hide-overlay').classList.remove('open');
   }
 
   function closeModal() {
@@ -1598,7 +1945,6 @@
   function pickColor(hex) {
     if (!activeProject) return;
     patchMeta(activeProject.name, { color: hex });
-    document.getElementById('modal-stripe').style.background = hex;
     document.querySelectorAll('.color-dot').forEach(d => {
       d.classList.toggle('active', d.style.backgroundColor === hexToRgb(hex));
     });
@@ -1632,12 +1978,36 @@
       .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
-  // ── About ──────────────────────────────────────────────────
-  function openAbout()  { document.getElementById('about-overlay').classList.add('open'); }
-  function closeAbout() { document.getElementById('about-overlay').classList.remove('open'); }
-  document.getElementById('about-overlay').addEventListener('click', e => {
-    if (e.target === document.getElementById('about-overlay')) closeAbout();
-  });
+  // ── Zoom & center ──────────────────────────────────────────
+  function setZoom(z) {
+    canvasZoom = Math.min(2.0, Math.max(0.25, Math.round(z * 10) / 10));
+    document.getElementById('zoom-label').textContent = Math.round(canvasZoom * 100) + '%';
+    fitCanvas();
+  }
+  function zoomIn()  { setZoom(canvasZoom + 0.1); }
+  function zoomOut() { setZoom(canvasZoom - 0.1); }
+
+  function centerView() {
+    const wrap = document.getElementById('canvas-wrap');
+    const els  = [...document.querySelectorAll('.card, .sticky')]
+      .filter(el => el.style.display !== 'none' && !el.classList.contains('filtered-out'));
+    if (!els.length) return;
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    els.forEach(el => {
+      const x = parseInt(el.style.left) || 0;
+      const y = parseInt(el.style.top)  || 0;
+      minX = Math.min(minX, x);
+      minY = Math.min(minY, y);
+      maxX = Math.max(maxX, x + (el.offsetWidth  || CARD_W));
+      maxY = Math.max(maxY, y + (el.offsetHeight || CARD_H));
+    });
+    wrap.scrollTo({
+      left: ((minX + maxX) / 2) * canvasZoom - wrap.clientWidth  / 2,
+      top:  ((minY + maxY) / 2) * canvasZoom - wrap.clientHeight / 2,
+      behavior: 'smooth',
+    });
+  }
+
 
   // ── Load data.json ─────────────────────────────────────────
   async function loadDataJson() {
@@ -1667,7 +2037,27 @@
   });
 
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') { closeModal(); closeAbout(); cancelReset(); if (currentDaw) closeSetup(); }
+    if (e.key === 'Escape') { closeModal(); cancelReset(); cancelHide(); if (currentDaw) closeSetup(); document.getElementById('search-results').classList.remove('open'); }
+    if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') return;
+    if (e.key === '+' || e.key === '=') zoomIn();
+    if (e.key === '-') zoomOut();
+    if (e.key === '0') setZoom(1.0);
+  });
+
+  window.addEventListener('resize', fitCanvas);
+
+  // ── Info tooltips ──────────────────────────────────────────
+  const _tip = document.getElementById('tip');
+  document.querySelectorAll('.info-tip').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      const r = el.getBoundingClientRect();
+      _tip.textContent = el.dataset.tip;
+      _tip.style.display = 'block';
+      const tipW = 240;
+      _tip.style.top  = (r.bottom + 7) + 'px';
+      _tip.style.left = Math.min(r.left, window.innerWidth - tipW - 16) + 'px';
+    });
+    el.addEventListener('mouseleave', () => { _tip.style.display = 'none'; });
   });
 
   if (window.pywebview) {

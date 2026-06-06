@@ -1,0 +1,120 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: macos-latest
+            artifact: TheSongIs-mac.dmg
+          - os: windows-latest
+            artifact: TheSongIs-win.exe
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install pywebview pyinstaller
+
+      - name: Build icon + app (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          cd app
+
+          brew install librsvg
+          mkdir -p icon.iconset
+          for size in 16 32 64 128 256 512; do
+            rsvg-convert -w $size -h $size static/favicon.svg -o icon.iconset/icon_${size}x${size}.png
+          done
+          rsvg-convert -w 32   -h 32   static/favicon.svg -o icon.iconset/icon_16x16@2x.png
+          rsvg-convert -w 64   -h 64   static/favicon.svg -o icon.iconset/icon_32x32@2x.png
+          rsvg-convert -w 256  -h 256  static/favicon.svg -o icon.iconset/icon_128x128@2x.png
+          rsvg-convert -w 512  -h 512  static/favicon.svg -o icon.iconset/icon_256x256@2x.png
+          rsvg-convert -w 1024 -h 1024 static/favicon.svg -o icon.iconset/icon_512x512@2x.png
+          iconutil -c icns icon.iconset -o static/icon.icns
+
+          pyinstaller \
+            --windowed \
+            --name "The Song Is" \
+            --icon static/icon.icns \
+            --add-data "templates:templates" \
+            --add-data "static:static" \
+            app.py
+
+          brew install create-dmg
+          create-dmg \
+            --volname "The Song Is" \
+            --window-size 540 380 \
+            --icon-size 128 \
+            --app-drop-link 380 185 \
+            --icon "The Song Is.app" 160 185 \
+            "TheSongIs-mac.dmg" \
+            "dist/The Song Is.app"
+
+      - name: Build icon + app (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          cd app
+
+          pip install cairosvg pillow
+          python -c "
+          import cairosvg, io
+          from PIL import Image
+          sizes = [16, 32, 48, 64, 128, 256]
+          imgs = []
+          for s in sizes:
+              png = cairosvg.svg2png(url='static/favicon.svg', output_width=s, output_height=s)
+              imgs.append(Image.open(io.BytesIO(png)).convert('RGBA'))
+          imgs[0].save('static/icon.ico', format='ICO', append_images=imgs[1:], sizes=[(s,s) for s in sizes])
+          "
+
+          pyinstaller `
+            --windowed `
+            --onefile `
+            --name "TheSongIs-win" `
+            --icon static/icon.ico `
+            --add-data "templates;templates" `
+            --add-data "static;static" `
+            app.py
+          copy dist\TheSongIs-win.exe TheSongIs-win.exe
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: app/${{ matrix.artifact }}
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Create or update latest release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: latest
+          name: Latest
+          allowUpdates: true
+          removeArtifacts: true
+          draft: false
+          prerelease: false
+          body: "Latest build."
+          artifacts: "TheSongIs-mac.dmg/TheSongIs-mac.dmg,TheSongIs-win.exe/TheSongIs-win.exe"
+          token: ${{ secrets.GITHUB_TOKEN }}
