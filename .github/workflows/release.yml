@@ -35,6 +35,8 @@ jobs:
         run: |
           cd app
 
+          echo "$GITHUB_REF_NAME" > static/version.txt
+
           brew install librsvg
           mkdir -p icon.iconset
           for size in 16 32 64 128 256 512; do
@@ -62,7 +64,7 @@ jobs:
             --icon-size 128 \
             --app-drop-link 380 185 \
             --icon "The Song Is.app" 160 185 \
-            "TheSongIs-mac.dmg" \
+            "TheSongIs-mac-${GITHUB_REF_NAME}.dmg" \
             "dist/The Song Is.app"
 
       - name: Build icon + app (Windows)
@@ -70,21 +72,23 @@ jobs:
         run: |
           cd app
 
+          Set-Content static\version.txt $env:GITHUB_REF_NAME
+
           pyinstaller `
             --windowed `
             --onefile `
-            --name "TheSongIs-win" `
+            --name "TheSongIs-win-$env:GITHUB_REF_NAME" `
             --icon static/favicon.ico `
             --add-data "templates;templates" `
             --add-data "static;static" `
             app.py
-          copy dist\TheSongIs-win.exe TheSongIs-win.exe
+          copy "dist\TheSongIs-win-$env:GITHUB_REF_NAME.exe" "TheSongIs-win-$env:GITHUB_REF_NAME.exe"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact }}
-          path: app/${{ matrix.artifact }}
+          path: app/TheSongIs-*-${{ github.ref_name }}.${{ matrix.os == 'macos-latest' && 'dmg' || 'exe' }}
 
   release:
     needs: build
@@ -102,5 +106,5 @@ jobs:
           prerelease: ${{ contains(github.ref_name, '-') }}
           generate_release_notes: true
           files: |
-            TheSongIs-mac.dmg/TheSongIs-mac.dmg
-            TheSongIs-win.exe/TheSongIs-win.exe
+            TheSongIs-mac.dmg/TheSongIs-mac-${{ github.ref_name }}.dmg
+            TheSongIs-win.exe/TheSongIs-win-${{ github.ref_name }}.exe

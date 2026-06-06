@@ -279,8 +279,15 @@ if __name__ == "__main__":
     html_path = os.path.join(RESOURCES_DIR, "templates", "index.html")
     api = Api()
 
+    version_file = os.path.join(RESOURCES_DIR, "static", "version.txt")
+    if os.path.exists(version_file):
+        with open(version_file) as f:
+            app_title = f"The Song Is {f.read().strip()}"
+    else:
+        app_title = "The Song Is"
+
     window = webview.create_window(
-        "The Song Is",
+        app_title,
         url=f"file://{html_path}",
         js_api=api,
         width=1400,
