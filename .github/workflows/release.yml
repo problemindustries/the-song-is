@@ -15,8 +15,10 @@ jobs:
         include:
           - os: macos-latest
             artifact: TheSongIs-mac.dmg
+            artifact_path: app/TheSongIs-mac-*.dmg
           - os: windows-latest
-            artifact: TheSongIs-win.exe
+            artifact: TheSongIs-win.zip
+            artifact_path: app/TheSongIs-win-*.zip
 
     runs-on: ${{ matrix.os }}
 
@@ -74,21 +76,25 @@ jobs:
 
           Set-Content static\version.txt $env:GITHUB_REF_NAME
 
+          $appName = "TheSongIs-win-$env:GITHUB_REF_NAME"
           pyinstaller `
             --windowed `
-            --onefile `
-            --name "TheSongIs-win-$env:GITHUB_REF_NAME" `
+            --onedir `
+            --name $appName `
             --icon static/favicon.ico `
             --add-data "templates;templates" `
             --add-data "static;static" `
             app.py
-          copy "dist\TheSongIs-win-$env:GITHUB_REF_NAME.exe" "TheSongIs-win-$env:GITHUB_REF_NAME.exe"
+
+          # One-file bundles extract to a temporary _MEI directory at runtime.
+          # WebView/DLL locks can make PyInstaller fail to remove it on exit.
+          Compress-Archive -Path "dist\$appName" -DestinationPath "$appName.zip"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact }}
-          path: app/TheSongIs-*-${{ github.ref_name }}.${{ matrix.os == 'macos-latest' && 'dmg' || 'exe' }}
+          path: ${{ matrix.artifact_path }}
 
   release:
     needs: build
@@ -107,4 +113,4 @@ jobs:
           generate_release_notes: true
           files: |
             TheSongIs-mac.dmg/TheSongIs-mac-${{ github.ref_name }}.dmg
-            TheSongIs-win.exe/TheSongIs-win-${{ github.ref_name }}.exe
+            TheSongIs-win.zip/TheSongIs-win-${{ github.ref_name }}.zip

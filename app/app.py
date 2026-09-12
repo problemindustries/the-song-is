@@ -1,4 +1,3 @@
-import glob
 import json
 import os
 import platform
@@ -27,18 +26,124 @@ DATA_FILE = os.path.join(DATA_DIR, "data.json")
 DAW_CONFIGS = {
     "fl_studio": {
         "label": "FL Studio",
-        "ext": "*.flp",
+        "extensions": (".flp",),
         "skip": {"Backup", "Templates"},
         "default_dir": os.path.expanduser("~/Documents/Image-Line/FL Studio/Projects"),
     },
     "ableton": {
         "label": "Ableton Live",
-        "ext": "*.als",
+        "extensions": (".als",),
         "skip": {"Backup", "Templates", "Samples"},
         "default_dir": os.path.expanduser(
             "~/Music/Ableton/Projects" if _system == "Darwin"
             else "~/Documents/Ableton/Projects"
         ),
+    },
+    "bitwig": {
+        "label": "Bitwig Studio",
+        "extensions": (".bwproject",),
+        "skip": {"backup", "auto-backups"},
+        "default_dir": os.path.expanduser("~/Documents/Bitwig Studio/Projects"),
+    },
+    "reaper": {
+        "label": "REAPER",
+        "extensions": (".rpp",),
+        "skip": {"Backup", "Backups"},
+        "default_dir": "",
+    },
+    "mixcraft": {
+        "label": "Mixcraft Pro Studio",
+        "extensions": (".mx10", ".mx9", ".mx8", ".mx7", ".mx6", ".mx5", ".mxc"),
+        "skip": {"Backup", "Templates"},
+        "default_dir": os.path.expanduser("~/Documents/Mixcraft Projects"),
+    },
+    "luna": {
+        "label": "LUNA",
+        "extensions": (),
+        "skip": {"Backups", "Templates"},
+        "folder_projects": True,
+        "default_dir": os.path.expanduser(
+            "~/Music/LUNA Sessions" if _system == "Darwin"
+            else "~/Documents/LUNA Sessions"
+        ),
+    },
+    "logic": {
+        "label": "Logic Pro",
+        "extensions": (".logicx",),
+        "skip": {"Templates"},
+        "default_dir": os.path.expanduser("~/Music/Logic"),
+    },
+    "garageband": {
+        "label": "GarageBand",
+        "extensions": (".band",),
+        "skip": set(),
+        "default_dir": os.path.expanduser("~/Music/GarageBand"),
+    },
+    "studio_one": {
+        "label": "Studio One",
+        "extensions": (".song",),
+        "skip": {"Templates"},
+        "default_dir": os.path.expanduser("~/Documents/Studio One/Songs"),
+    },
+    "cubase": {
+        "label": "Cubase",
+        "extensions": (".cpr",),
+        "skip": {"Backup", "Templates"},
+        "default_dir": "",
+    },
+    "nuendo": {
+        "label": "Nuendo",
+        "extensions": (".npr",),
+        "skip": {"Backup", "Templates"},
+        "default_dir": "",
+    },
+    "pro_tools": {
+        "label": "Pro Tools",
+        "extensions": (".ptx", ".ptf"),
+        "skip": {"Session File Backups", "Video Files", "WaveCache.wfm"},
+        "default_dir": os.path.expanduser("~/Documents/Pro Tools"),
+    },
+    "reason": {
+        "label": "Reason",
+        "extensions": (".reason",),
+        "skip": {"Backups", "Templates"},
+        "default_dir": "",
+    },
+    "cakewalk": {
+        "label": "Cakewalk",
+        "extensions": (".cwp",),
+        "skip": {"Audio Data", "Picture Cache", "Templates"},
+        "default_dir": os.path.expanduser("~/Documents/Cakewalk Projects"),
+    },
+    "waveform": {
+        "label": "Waveform",
+        "extensions": (".tracktionedit",),
+        "skip": {"Backups", "Templates"},
+        "default_dir": "",
+    },
+    "ardour": {
+        "label": "Ardour",
+        "extensions": (".ardour",),
+        "skip": {"dead_sounds", "export", "interchange", "peaks"},
+        "default_dir": "",
+    },
+    "lmms": {
+        "label": "LMMS",
+        "extensions": (".mmpz", ".mmp"),
+        "skip": {"templates"},
+        "default_dir": os.path.expanduser("~/Documents/lmms/projects"),
+    },
+    "renoise": {
+        "label": "Renoise",
+        "extensions": (".xrns",),
+        "skip": {"Backups", "Templates"},
+        "default_dir": "",
+    },
+    "adobe_audition": {
+        "label": "Adobe Audition",
+        "extensions": (".sesx",),
+        "skip": {"Backup", "Templates"},
+        "default_dir": "",
     },
 }
 
@@ -55,9 +160,29 @@ def save_data(data):
         json.dump(data, f, indent=2)
 
 
+def daw_config(daw):
+    return DAW_CONFIGS.get(daw, DAW_CONFIGS["fl_studio"])
+
+
+def is_project_path(path, config):
+    name = os.path.basename(path).casefold()
+    return any(name.endswith(ext.casefold()) for ext in config["extensions"])
+
+
+def project_name(path, config):
+    name = os.path.basename(path)
+    for ext in config["extensions"]:
+        if name.casefold().endswith(ext.casefold()):
+            return name[:-len(ext)]
+    return name
+
+
 def get_project_files(folder, daw):
-    ext = DAW_CONFIGS.get(daw, DAW_CONFIGS["fl_studio"])["ext"]
-    files = glob.glob(os.path.join(folder, ext))
+    config = daw_config(daw)
+    files = [
+        entry.path for entry in os.scandir(folder)
+        if not entry.name.startswith(".") and is_project_path(entry.path, config)
+    ]
     files.sort(key=os.path.getmtime, reverse=True)
     return files
 
@@ -72,6 +197,14 @@ class Api:
             "projects_dir": projects_dir,
             "is_configured": daw is not None and projects_dir is not None,
             "default_dirs": {k: v["default_dir"] for k, v in DAW_CONFIGS.items()},
+            "daws": {
+                key: {
+                    "label": config["label"],
+                    "extensions": list(config["extensions"]),
+                    "folder_projects": config.get("folder_projects", False),
+                }
+                for key, config in DAW_CONFIGS.items()
+            },
         }
 
     def set_config(self, daw, projects_dir):
@@ -128,25 +261,55 @@ class Api:
         if not projects_dir or not os.path.exists(projects_dir):
             return []
 
-        skip = DAW_CONFIGS.get(daw, DAW_CONFIGS["fl_studio"])["skip"]
+        config = daw_config(daw)
+        skip = {name.casefold() for name in config["skip"]}
         projects = []
-        for name in sorted(os.listdir(projects_dir)):
-            if name in skip or name.startswith("."):
+        seen_names = set()
+        entries = sorted(os.scandir(projects_dir), key=lambda entry: entry.name.casefold())
+
+        # Preserve the original behavior first: each immediate subfolder is a
+        # project, and its newest matching file is the one opened by default.
+        for entry in entries:
+            if entry.name.casefold() in skip or entry.name.startswith("."):
                 continue
-            folder = os.path.join(projects_dir, name)
-            if not os.path.isdir(folder):
+            if not entry.is_dir() or is_project_path(entry.path, config):
                 continue
 
-            files = get_project_files(folder, daw)
+            files = get_project_files(entry.path, daw)
+            if not files and config.get("folder_projects"):
+                files = [entry.path]
             main_file = files[0] if files else None
             mtime = os.path.getmtime(main_file) if main_file else None
 
             projects.append({
-                "name": name,
+                "name": entry.name,
+                "main_file": main_file,
+                "project_files": files,
                 "main_flp": main_file,
                 "flps": files,
                 "mtime": mtime,
             })
+            seen_names.add(entry.name.casefold())
+
+        # Some DAWs store project files or macOS packages directly in one
+        # library folder instead of creating a containing folder per project.
+        for entry in entries:
+            if entry.name.startswith(".") or not is_project_path(entry.path, config):
+                continue
+            name = project_name(entry.path, config)
+            if name.casefold() in seen_names:
+                continue
+            projects.append({
+                "name": name,
+                "main_file": entry.path,
+                "project_files": [entry.path],
+                "main_flp": entry.path,
+                "flps": [entry.path],
+                "mtime": os.path.getmtime(entry.path),
+            })
+            seen_names.add(name.casefold())
+
+        projects.sort(key=lambda project: project["name"].casefold())
 
         return projects
 
@@ -239,13 +402,20 @@ class Api:
         except Exception as e:
             return {"error": str(e)}
 
-    def open_file(self, path):
-        if not path or not os.path.isfile(path):
+    def open_file(self, path, daw=None):
+        if not path or not os.path.exists(path):
             return {"error": "File not found"}
         system = platform.system()
         if system == "Darwin":
-            subprocess.Popen(["open", path])
+            command = ["open", path]
+            if daw == "luna" and os.path.isdir(path):
+                command = ["open", "-a", "LUNA", path]
+            subprocess.Popen(command)
         elif system == "Windows":
+            if daw == "luna" and os.path.isdir(path):
+                shortcut = os.path.join(path, "Open Session.lnk")
+                if os.path.exists(shortcut):
+                    path = shortcut
             os.startfile(path)
         else:
             subprocess.Popen(["xdg-open", path])
