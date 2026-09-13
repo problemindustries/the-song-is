@@ -9,12 +9,13 @@ Visual project browser for music producers, whichever DAW they use.
 
 ## Features
 
-- Scan your projects folder, display each project as a draggable card on a canvas. 
+- Scan one or more project folders and display each project as a draggable card on a canvas
 - Keep newly discovered projects in an inbox until you drag them onto the canvas
 - Navigate large boards with a live, clickable minimap
 - Switch between a freeform pin-up board and named Kanban columns
 - Filter projects by color, rating, notes or missing project files
 - Rate, colour-tag, write notes about each project
+- Assign an audio file by choosing it or dropping it onto a card, with a persistent master volume
 - Open projects directly from the app
 - Add sticky notes
 - Everything persists locally, no account required
@@ -22,6 +23,7 @@ Visual project browser for music producers, whichever DAW they use.
 - Supports FL Studio, Ableton Live, Bitwig Studio, REAPER, Mixcraft Pro Studio,
   LUNA, Logic Pro, GarageBand, Studio One, Cubase, Nuendo, Pro Tools, Reason,
   Cakewalk, Waveform, Ardour, LMMS, Renoise and Adobe Audition
+- Opens both `.flp` projects and valid FL Studio zipped project packages
 
 ## Running locally
 

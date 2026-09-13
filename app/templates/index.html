@@ -633,6 +633,7 @@
     .kanban-card-meta {
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 8px;
       margin-top: 7px;
       color: var(--text-dim);
@@ -801,6 +802,29 @@
       opacity: 0.92;
       cursor: grabbing;
     }
+    .card.audio-drop-target,
+    .kanban-card.audio-drop-target,
+    #modal-preview-audio.audio-drop-target {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--accent), 0 8px 24px var(--shadow-drag);
+    }
+    .card.audio-drop-target::after,
+    .kanban-card.audio-drop-target::after,
+    #modal-preview-audio.audio-drop-target::after {
+      content: 'Drop audio to assign';
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      display: grid;
+      place-items: center;
+      padding: 12px;
+      background: var(--bg-card);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+      text-align: center;
+      pointer-events: none;
+    }
     .card.filtered-out { display: none; }
     .card.is-hidden {
       opacity: 0.35;
@@ -826,6 +850,14 @@
       line-height: 1.3;
     }
     .card-stars { margin-bottom: 5px; }
+    .card-rating-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 5px;
+    }
+    .card-rating-row .card-stars { margin-bottom: 0; }
 
     .star { font-size: 11px; color: var(--star-off); }
     .star.on { color: #ffc107; }
@@ -833,7 +865,16 @@
     .star.interactive:hover,
     .star.interactive.preview { color: #ffc107; }
 
-    .card-date { font-size: 10px; font-family: var(--font-mono); color: var(--text-card-date); margin-top: 3px; }
+    .card-dates {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin-top: 3px;
+      color: var(--text-card-date);
+      font-family: var(--font-mono);
+      font-size: 9px;
+    }
+    .project-date-label { opacity: 0.72; }
     .card-notes {
       font-size: 11px; color: var(--text-card-notes);
       margin-top: 7px; line-height: 1.5;
@@ -841,6 +882,34 @@
       -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical;
     }
     .card-no-flp { font-size: 10px; color: #c0392b; margin-top: 5px; }
+
+    .preview-play-btn {
+      width: 25px;
+      height: 22px;
+      flex: 0 0 25px;
+      padding: 0;
+      border: 1px solid var(--border-input);
+      border-radius: 5px;
+      background: var(--bg-input);
+      color: var(--text);
+      font-size: 10px;
+      cursor: pointer;
+    }
+    .preview-play-btn:hover,
+    .preview-play-btn.playing { border-color: var(--accent); color: var(--accent); }
+    .preview-progress {
+      height: 3px;
+      margin-top: 5px;
+      overflow: hidden;
+      border-radius: 2px;
+      background: var(--border);
+    }
+    .preview-progress-fill {
+      width: 0;
+      height: 100%;
+      background: var(--accent);
+      transition: width 0.08s linear;
+    }
 
     /* ── Sticky Notes ─────────────────────────────────────── */
     .sticky {
@@ -1005,6 +1074,93 @@
     #modal-notes:focus { border-color: var(--accent); }
     #modal-notes::placeholder { color: var(--text-dim); }
 
+    #modal-dates {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      font-size: 11px;
+    }
+    #modal-dates div {
+      padding: 9px 10px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+    }
+
+    #modal-preview-audio {
+      position: relative;
+      min-height: 104px;
+      padding: 14px;
+      border: 1px dashed var(--border-input);
+      border-radius: 8px;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .preview-audio-drop-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 7px;
+      text-align: center;
+    }
+    .preview-audio-drop-icon {
+      color: var(--accent);
+      font-size: 22px;
+      line-height: 1;
+    }
+    .preview-audio-drop-title {
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .preview-audio-drop-help,
+    .settings-audio-help {
+      color: var(--text-dim);
+      font-size: 10px;
+      line-height: 1.5;
+    }
+    .settings-audio-help {
+      margin-bottom: 13px;
+    }
+    .preview-audio-file {
+      overflow: hidden;
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .preview-audio-status {
+      margin-top: 5px;
+      color: var(--text-dim);
+      font-size: 10px;
+    }
+    .preview-audio-status.error { color: #c0392b; }
+    .preview-audio-actions {
+      display: flex;
+      gap: 7px;
+      margin-top: 10px;
+    }
+    .preview-audio-actions .hdr-btn { height: 29px; }
+
+    #preview-volume-row {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 10px;
+    }
+    #preview-volume {
+      width: 100%;
+      accent-color: var(--accent);
+    }
+    #preview-volume-label {
+      width: 38px;
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-align: right;
+    }
+
     #modal-flps { display: flex; flex-direction: column; gap: 6px; }
     .flp-row {
       display: flex; align-items: center; gap: 10px;
@@ -1152,6 +1308,16 @@
       width: 16px; height: 16px;
       accent-color: var(--accent); cursor: pointer;
     }
+    #settings-date-format {
+      padding: 6px 8px;
+      border: 1px solid var(--border-input);
+      border-radius: 6px;
+      background: var(--bg-input);
+      color: var(--text);
+      font-size: 12px;
+      outline: none;
+    }
+    #settings-date-format:focus { border-color: var(--accent); }
     .settings-btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
     .settings-about { text-align: center; padding-top: 4px; }
     .settings-about img {
@@ -1171,12 +1337,18 @@
       text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;
     }
 
-    #setup-path-row {
-      display: flex; gap: 8px; margin-bottom: 8px;
+    #setup-path-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 10px;
     }
 
-    #setup-path {
+    .setup-path-row { display: flex; gap: 8px; }
+
+    .setup-path {
       flex: 1;
+      min-width: 0;
       background: transparent;
       border: none;
       border-bottom: 1px solid var(--border-input);
@@ -1188,9 +1360,11 @@
       outline: none;
       transition: border-color 0.15s;
     }
-    #setup-path:focus { border-color: var(--accent); }
+    .setup-path:focus { border-color: var(--accent); }
 
-    #setup-browse-btn {
+    .setup-browse-btn,
+    .setup-remove-folder-btn,
+    #setup-add-folder-btn {
       background: var(--bg-input);
       border: 1px solid var(--border-input);
       border-radius: 7px;
@@ -1201,7 +1375,16 @@
       white-space: nowrap;
       transition: border-color 0.15s, background 0.15s;
     }
-    #setup-browse-btn:hover { border-color: var(--accent); }
+    .setup-browse-btn:hover,
+    .setup-remove-folder-btn:hover,
+    #setup-add-folder-btn:hover { border-color: var(--accent); }
+    .setup-remove-folder-btn { padding: 0 11px; }
+    #setup-add-folder-btn {
+      width: 100%;
+      padding: 9px 12px;
+      border-style: dashed;
+      margin-bottom: 8px;
+    }
 
     #setup-path-hint {
       font-size: 11px;
@@ -1509,18 +1692,16 @@
   <div id="setup-card">
     <button id="setup-close" onclick="closeSetup()">✕</button>
     <h2 id="setup-heading">Settings</h2>
-    <p id="setup-desc">Select your DAW, then point the app at your projects folder.</p>
+    <p id="setup-desc">Select your DAW, then add one or more project folders.</p>
 
     <div class="settings-section" style="border-top:none; margin-top:0; padding-top:0">
-      <div class="settings-section-title">DAW &amp; Projects Folder <span class="info-tip" data-tip="Choose your DAW so the app knows which project files to scan for.">?</span></div>
+      <div class="settings-section-title">DAW &amp; Project Folders <span class="info-tip" data-tip="Choose your DAW so the app knows which project files to scan for.">?</span></div>
       <div id="daw-picker"></div>
 
       <div id="setup-folder-section" style="display:none">
-        <div class="setup-label" style="margin-top:18px">Projects Folder</div>
-        <div id="setup-path-row">
-          <input id="setup-path" type="text" placeholder="Path to your projects folder…" oninput="onSetupPathInput()">
-          <button id="setup-browse-btn" onclick="browseFolder()">Browse…</button>
-        </div>
+        <div class="setup-label" style="margin-top:18px">Project Folders</div>
+        <div id="setup-path-list"></div>
+        <button id="setup-add-folder-btn" onclick="addSetupFolder()">+ Add another folder</button>
         <div id="setup-path-hint"></div>
         <button id="setup-save-btn" onclick="saveFolder()" disabled>Open Browser</button>
       </div>
@@ -1532,6 +1713,13 @@
       <div class="settings-section">
         <div class="settings-section-title">Appearance <span class="info-tip" data-tip="Choose an accent color used for buttons, highlights and interactive elements throughout the app.">?</span></div>
         <div class="accent-swatches" id="accent-swatches"></div>
+        <label class="settings-row" for="settings-date-format" style="margin-top:16px">
+          <span class="settings-row-label">Date format</span>
+          <select id="settings-date-format" onchange="setDateFormat(this.value)">
+            <option value="european">European (DD.MM.YYYY)</option>
+            <option value="american">American (MM/DD/YYYY)</option>
+          </select>
+        </label>
       </div>
 
       <div class="settings-section">
@@ -1539,6 +1727,20 @@
         <label class="settings-row" for="settings-show-hidden-cb">
           <span class="settings-row-label">Show hidden projects</span>
           <input type="checkbox" id="settings-show-hidden-cb" onchange="toggleShowHidden()">
+        </label>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">Audio previews <span class="info-tip" data-tip="Controls the volume of manually assigned project previews. Preview files are never modified or deleted.">?</span></div>
+        <div class="settings-audio-help">Drag a WAV, MP3, M4A or AAC file onto any project card, or open Project Details and browse from the project folder.</div>
+        <div id="preview-volume-row">
+          <span class="settings-row-label">Master volume</span>
+          <input id="preview-volume" type="range" min="0" max="100" step="1" oninput="setPreviewVolume(this.value)">
+          <span id="preview-volume-label">80%</span>
+        </div>
+        <label class="settings-row" for="preview-muted" style="margin-top:12px">
+          <span class="settings-row-label">Mute previews</span>
+          <input type="checkbox" id="preview-muted" onchange="setPreviewMuted(this.checked)">
         </label>
       </div>
 
@@ -1589,6 +1791,16 @@
     <div class="section">
       <div class="section-label">Notes</div>
       <textarea id="modal-notes" placeholder="What's this project about? Ideas, status, anything…"></textarea>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Project dates</div>
+      <div id="modal-dates"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Preview audio</div>
+      <div id="modal-preview-audio"></div>
     </div>
 
     <div class="section" id="kanban-assignment-section">
@@ -1668,6 +1880,7 @@
   let showHidden = false;
   let currentDaw = null;    // DAW currently in use
   let selectedDaw = null;   // selection in the setup screen
+  let setupFolders = [];
   let defaultDirs = {};
   let dawConfigs = {};
   let selectedColors = new Set();
@@ -1690,6 +1903,8 @@
   let dragStartX = 0, dragStartY = 0, didDrag = false;
   let minimapFrame = null;
   let minimapNav = null;
+  const previewAudio = new Audio();
+  let previewProjectName = null;
 
   // ── Theme ──────────────────────────────────────────────────
   const ICON_MOON = `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
@@ -1769,6 +1984,7 @@
   async function init() {
     applyTheme(localStorage.getItem('theme') || 'light');
     applyAccent(localStorage.getItem('accent_name') || 'Sage');
+    applyPreviewAudioSettings();
 
     const [config, initialMetadata] = await Promise.all([
       window.pywebview.api.get_config(),
@@ -1868,10 +2084,10 @@
   }
 
   async function loadProjects() {
-    [projects, metadata] = await Promise.all([
-      window.pywebview.api.get_projects(),
-      window.pywebview.api.get_metadata(),
-    ]);
+    // Project discovery may reserve stable names for duplicates across
+    // libraries, so load metadata after the scan has completed.
+    projects = await window.pywebview.api.get_projects();
+    metadata = await window.pywebview.api.get_metadata();
     await ensureProjectInboxInitialized();
     renderCanvas();
     updateCount();
@@ -1894,6 +2110,8 @@
 
     const cb = document.getElementById('settings-show-hidden-cb');
     if (cb) cb.checked = showHidden;
+    document.getElementById('settings-date-format').value = currentDateFormat();
+    syncPreviewAudioSettingsUI();
 
     renderAccentSwatches();
 
@@ -1906,9 +2124,13 @@
     const folderSection = document.getElementById('setup-folder-section');
     if (selectedDaw) {
       folderSection.style.display = '';
-      const pathEl = document.getElementById('setup-path');
-      pathEl.value = (metadata && metadata._projects_dir) || defaultDirs[selectedDaw] || '';
-      onSetupPathInput();
+      const configuredFolders = Array.isArray(metadata?._projects_dirs)
+        ? metadata._projects_dirs
+        : startupConfig?.projects_dirs || (metadata?._projects_dir ? [metadata._projects_dir] : []);
+      setupFolders = configuredFolders.length
+        ? [...configuredFolders]
+        : [defaultDirs[selectedDaw] || ''];
+      renderSetupFolders();
     } else {
       folderSection.style.display = 'none';
     }
@@ -1926,13 +2148,12 @@
     const folderSection = document.getElementById('setup-folder-section');
     folderSection.style.display = '';
 
-    const pathEl = document.getElementById('setup-path');
-    // Auto-fill default path if empty or currently showing another DAW's default
-    const isOtherDefault = Object.values(defaultDirs).includes(pathEl.value);
-    if (!pathEl.value || isOtherDefault) {
-      pathEl.value = defaultDirs[daw] || '';
+    // Auto-fill the DAW default only when the user has not built a custom list.
+    const isOtherDefault = setupFolders.length === 1 && Object.values(defaultDirs).includes(setupFolders[0]);
+    if (!setupFolders.length || (setupFolders.length === 1 && !setupFolders[0]) || isOtherDefault) {
+      setupFolders = [defaultDirs[daw] || ''];
     }
-    onSetupPathInput();
+    renderSetupFolders();
   }
 
   function closeSetup() {
@@ -1940,36 +2161,72 @@
   }
 
   function onSetupPathInput() {
-    const val = document.getElementById('setup-path').value.trim();
+    const paths = setupFolders.map(path => path.trim()).filter(Boolean);
     const hint = document.getElementById('setup-path-hint');
     const btn  = document.getElementById('setup-save-btn');
-    if (!val) {
+    if (!paths.length) {
       hint.textContent = '';
       hint.className = '';
       btn.disabled = true;
       return;
     }
     // Optimistic — server will validate on save
-    hint.textContent = val;
+    hint.textContent = `${paths.length} folder${paths.length === 1 ? '' : 's'} selected`;
     hint.className = '';
     btn.disabled = false;
   }
 
-  async function browseFolder() {
-    const btn = document.getElementById('setup-browse-btn');
+  function renderSetupFolders() {
+    if (!setupFolders.length) setupFolders = [''];
+    const list = document.getElementById('setup-path-list');
+    list.innerHTML = setupFolders.map((path, index) => `
+      <div class="setup-path-row">
+        <input class="setup-path" type="text" value="${esc(path)}"
+          placeholder="Path to a projects folder…"
+          oninput="setSetupFolder(${index}, this.value)">
+        <button class="setup-browse-btn" data-index="${index}" onclick="browseFolder(${index})">Browse…</button>
+        ${setupFolders.length > 1
+          ? `<button class="setup-remove-folder-btn" onclick="removeSetupFolder(${index})" title="Remove folder">×</button>`
+          : ''}
+      </div>
+    `).join('');
+    onSetupPathInput();
+  }
+
+  function setSetupFolder(index, value) {
+    setupFolders[index] = value;
+    onSetupPathInput();
+  }
+
+  function addSetupFolder() {
+    setupFolders.push('');
+    renderSetupFolders();
+    browseFolder(setupFolders.length - 1);
+  }
+
+  function removeSetupFolder(index) {
+    setupFolders.splice(index, 1);
+    renderSetupFolders();
+  }
+
+  async function browseFolder(index) {
+    const btn = document.querySelector(`.setup-browse-btn[data-index="${index}"]`);
     btn.textContent = 'Opening…';
     btn.disabled = true;
     try {
       const data = await window.pywebview.api.browse_folder();
       if (data.path) {
-        document.getElementById('setup-path').value = data.path;
-        onSetupPathInput();
+        setupFolders[index] = data.path;
+        renderSetupFolders();
       }
     } catch (e) {
       toast('Could not open folder picker');
     } finally {
-      btn.textContent = 'Browse…';
-      btn.disabled = false;
+      const currentBtn = document.querySelector(`.setup-browse-btn[data-index="${index}"]`);
+      if (currentBtn) {
+        currentBtn.textContent = 'Browse…';
+        currentBtn.disabled = false;
+      }
     }
   }
 
@@ -1978,16 +2235,19 @@
       toast('Please select a DAW first');
       return;
     }
-    const path = document.getElementById('setup-path').value.trim();
+    const paths = setupFolders.map(path => path.trim()).filter(Boolean);
     const hint = document.getElementById('setup-path-hint');
     const btn  = document.getElementById('setup-save-btn');
     btn.disabled = true;
     btn.textContent = 'Saving…';
 
-    const data = await window.pywebview.api.set_config(selectedDaw, path);
+    const data = await window.pywebview.api.set_config(selectedDaw, paths);
 
     if (data.ok) {
       currentDaw = selectedDaw;
+      metadata._projects_dir = paths[0];
+      metadata._projects_dirs = paths;
+      startupConfig = { ...startupConfig, daw: selectedDaw, projects_dir: paths[0], projects_dirs: paths, is_configured: true };
       updateDawUI();
       hint.textContent = '✓ Saved';
       hint.className = 'ok';
@@ -2367,9 +2627,8 @@
     const meta = getMeta(project.name);
     const color = meta.color || COLORS[0].hex;
     const rating = meta.rating || 0;
-    const date = project.mtime
-      ? new Date(project.mtime * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-      : '';
+    const createdDate = formatProjectDate(project.created_at);
+    const modifiedDate = formatProjectDate(project.modified_at || project.mtime);
     const card = document.createElement('div');
     card.className = 'kanban-card';
     card.dataset.name = project.name;
@@ -2380,9 +2639,16 @@
       ${meta.notes ? `<div class="kanban-card-notes" title="${esc(meta.notes)}">${esc(meta.notes)}</div>` : ''}
       <div class="kanban-card-meta">
         <span class="kanban-card-stars">${miniStars(rating)}</span>
-        ${date ? `<span>${date}</span>` : ''}
+        ${meta.preview_audio ? previewButtonMarkup(project.name) : ''}
+      </div>
+      ${meta.preview_audio ? previewProgressMarkup(project.name) : ''}
+      <div class="card-dates">
+        <div><span class="project-date-label">Created</span> ${createdDate}</div>
+        <div><span class="project-date-label">Modified</span> ${modifiedDate}</div>
       </div>
     `;
+    bindPreviewControls(card, project.name);
+    bindAudioDropTarget(card, project.name);
     card.addEventListener('click', () => openModal(project.name));
     card.addEventListener('dragstart', e => {
       kanbanDrag = { name: project.name, isNew: false };
@@ -2689,9 +2955,8 @@
     const rating = meta.rating || 0;
     const notes  = meta.notes  || '';
     const hidden = meta.hidden || false;
-    const date   = project.mtime
-      ? new Date(project.mtime * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' })
-      : '';
+    const createdDate = formatProjectDate(project.created_at);
+    const modifiedDate = formatProjectDate(project.modified_at || project.mtime);
 
     const card = document.createElement('div');
     card.className = 'card' + (hidden ? ' is-hidden' : '');
@@ -2706,12 +2971,21 @@
       <div class="card-stripe" style="background:${color}"></div>
       <div class="card-body">
         <div class="card-title" title="${esc(project.name)}">${esc(project.name)}</div>
-        <div class="card-stars">${miniStars(rating)}</div>
-        ${date  ? `<div class="card-date">${date}</div>` : ''}
+        <div class="card-rating-row">
+          <div class="card-stars">${miniStars(rating)}</div>
+          ${meta.preview_audio ? previewButtonMarkup(project.name) : ''}
+        </div>
+        ${meta.preview_audio ? previewProgressMarkup(project.name) : ''}
+        <div class="card-dates">
+          <div><span class="project-date-label">Created</span> ${createdDate}</div>
+          <div><span class="project-date-label">Modified</span> ${modifiedDate}</div>
+        </div>
         ${notes ? `<div class="card-notes">${esc(notes)}</div>` : ''}
         ${!projectMainFile(project) ? `<div class="card-no-flp">No ${esc(dawExtensionLabel(currentDawConfig()))} found</div>` : ''}
       </div>
     `;
+    bindPreviewControls(card, project.name);
+    bindAudioDropTarget(card, project.name);
     card.addEventListener('mousedown', e => startDrag(e, card, 'card'));
     return card;
   }
@@ -3193,6 +3467,9 @@
       }, 400);
     };
 
+    renderModalDates(activeProject);
+    renderModalPreviewAudio(activeProject);
+
     // Kanban assignment lives in project details, keeping board cards compact.
     const assignmentSection = document.getElementById('kanban-assignment-section');
     assignmentSection.style.display = viewMode === 'kanban' ? '' : 'none';
@@ -3311,6 +3588,301 @@
     refreshCard(activeProject.name);
   }
 
+  // ── Audio previews ─────────────────────────────────────────
+  function previewButtonMarkup(name) {
+    return `<button class="preview-play-btn" data-preview-name="${esc(name)}" title="Play audio preview" aria-label="Play audio preview">▶</button>`;
+  }
+
+  function previewProgressMarkup(name) {
+    return `<div class="preview-progress" data-preview-name="${esc(name)}"><div class="preview-progress-fill"></div></div>`;
+  }
+
+  function bindPreviewControls(container, name) {
+    container.querySelectorAll('.preview-play-btn').forEach(button => {
+      button.draggable = false;
+      button.addEventListener('mousedown', event => event.stopPropagation());
+      button.addEventListener('dragstart', event => {
+        event.preventDefault();
+        event.stopPropagation();
+      });
+      button.addEventListener('click', event => {
+        event.preventDefault();
+        event.stopPropagation();
+        toggleAudioPreview(name);
+      });
+    });
+    updatePreviewPlaybackUI();
+  }
+
+  let audioDropProjectName = null;
+  let audioDropSequence = 0;
+
+  function isExternalFileDrag(event) {
+    return Array.from(event.dataTransfer?.types || []).includes('Files');
+  }
+
+  function clearAudioDropTargets() {
+    document.querySelectorAll('.audio-drop-target').forEach(card => {
+      card.classList.remove('audio-drop-target');
+    });
+  }
+
+  function bindAudioDropTarget(card, name) {
+    card.addEventListener('dragenter', event => {
+      if (!isExternalFileDrag(event)) return;
+      event.preventDefault();
+      audioDropProjectName = name;
+      clearAudioDropTargets();
+      card.classList.add('audio-drop-target');
+    });
+    card.addEventListener('dragover', event => {
+      if (!isExternalFileDrag(event)) return;
+      event.preventDefault();
+      event.dataTransfer.dropEffect = 'copy';
+      audioDropProjectName = name;
+      card.classList.add('audio-drop-target');
+    });
+    card.addEventListener('dragleave', event => {
+      if (!card.contains(event.relatedTarget)) card.classList.remove('audio-drop-target');
+    });
+    card.addEventListener('drop', event => {
+      if (!isExternalFileDrag(event)) return;
+      event.preventDefault();
+      audioDropProjectName = name;
+      clearAudioDropTargets();
+      const sequence = ++audioDropSequence;
+      setTimeout(() => {
+        if (audioDropSequence === sequence) audioDropProjectName = null;
+      }, 5000);
+    });
+  }
+
+  async function assignDroppedPreviewAudio(path) {
+    const name = audioDropProjectName;
+    audioDropProjectName = null;
+    audioDropSequence++;
+    clearAudioDropTargets();
+    const project = projects.find(item => item.name === name);
+    if (!project) {
+      toast('Drop the audio file directly onto a project card');
+      return;
+    }
+    const result = await window.pywebview.api.assign_audio_file(project.project_path, path);
+    if (!result.ok) {
+      toast(result.error || 'Could not assign preview audio');
+      return;
+    }
+    stopAudioPreview(name);
+    metadata[name] = { ...getMeta(name), preview_audio: result.reference };
+    await saveMeta();
+    refreshCard(name);
+    if (activeProject?.name === name) renderModalPreviewAudio(project);
+    toast('Audio preview assigned');
+  }
+
+  window.assignDroppedPreviewAudio = assignDroppedPreviewAudio;
+
+  function previewVolume() {
+    const saved = localStorage.getItem('preview_volume');
+    if (saved === null) return 0.8;
+    const value = Number(saved);
+    return Number.isFinite(value) ? Math.min(1, Math.max(0, value)) : 0.8;
+  }
+
+  function previewMuted() {
+    return localStorage.getItem('preview_muted') === 'true';
+  }
+
+  function applyPreviewAudioSettings() {
+    previewAudio.volume = previewVolume();
+    previewAudio.muted = previewMuted();
+  }
+
+  function syncPreviewAudioSettingsUI() {
+    const volume = Math.round(previewVolume() * 100);
+    document.getElementById('preview-volume').value = volume;
+    document.getElementById('preview-volume-label').textContent = `${volume}%`;
+    document.getElementById('preview-muted').checked = previewMuted();
+  }
+
+  function setPreviewVolume(value) {
+    const volume = Math.min(100, Math.max(0, Number(value) || 0));
+    localStorage.setItem('preview_volume', String(volume / 100));
+    applyPreviewAudioSettings();
+    document.getElementById('preview-volume-label').textContent = `${Math.round(volume)}%`;
+  }
+
+  function setPreviewMuted(muted) {
+    localStorage.setItem('preview_muted', muted ? 'true' : 'false');
+    applyPreviewAudioSettings();
+  }
+
+  function updatePreviewPlaybackUI() {
+    const isPlaying = previewProjectName && !previewAudio.paused;
+    const progress = previewAudio.duration && Number.isFinite(previewAudio.duration)
+      ? Math.min(100, Math.max(0, previewAudio.currentTime / previewAudio.duration * 100))
+      : 0;
+    document.querySelectorAll('.preview-play-btn').forEach(button => {
+      const active = button.dataset.previewName === previewProjectName;
+      button.textContent = active && isPlaying ? '❚❚' : '▶';
+      button.classList.toggle('playing', active && isPlaying);
+      button.title = active && isPlaying ? 'Pause audio preview' : 'Play audio preview';
+      button.setAttribute('aria-label', button.title);
+    });
+    document.querySelectorAll('.preview-progress').forEach(track => {
+      const fill = track.querySelector('.preview-progress-fill');
+      fill.style.width = track.dataset.previewName === previewProjectName ? `${progress}%` : '0%';
+    });
+  }
+
+  async function toggleAudioPreview(name) {
+    if (previewProjectName === name && previewAudio.src) {
+      if (previewAudio.paused) {
+        try {
+          await previewAudio.play();
+        } catch (error) {
+          toast('Could not play this audio format');
+        }
+      } else {
+        previewAudio.pause();
+      }
+      updatePreviewPlaybackUI();
+      return;
+    }
+
+    const project = projects.find(item => item.name === name);
+    const reference = getMeta(name).preview_audio;
+    if (!project || !reference) return;
+    const result = await window.pywebview.api.resolve_audio_file(project.project_path, reference);
+    if (!result.ok) {
+      toast(result.error || 'Could not load preview audio');
+      if (activeProject?.name === name) setModalPreviewStatus(result.error, true);
+      return;
+    }
+
+    previewAudio.pause();
+    previewProjectName = name;
+    previewAudio.src = result.url;
+    applyPreviewAudioSettings();
+    try {
+      await previewAudio.play();
+    } catch (error) {
+      toast('Could not play this audio format');
+    }
+    updatePreviewPlaybackUI();
+  }
+
+  function stopAudioPreview(name = null) {
+    if (name && previewProjectName !== name) return;
+    previewAudio.pause();
+    previewAudio.removeAttribute('src');
+    previewAudio.load();
+    previewProjectName = null;
+    updatePreviewPlaybackUI();
+  }
+
+  function previewFilename(reference) {
+    return String(reference?.path || '').split(/[\\/]/).pop() || 'Audio preview';
+  }
+
+  function setModalPreviewStatus(message, isError = false) {
+    const status = document.querySelector('#modal-preview-audio .preview-audio-status');
+    if (!status) return;
+    status.textContent = message || '';
+    status.classList.toggle('error', isError);
+  }
+
+  function renderModalPreviewAudio(project) {
+    const container = document.getElementById('modal-preview-audio');
+    const reference = getMeta(project.name).preview_audio;
+    if (!reference) {
+      container.innerHTML = `
+        <div class="preview-audio-drop-empty">
+          <div class="preview-audio-drop-icon">♫</div>
+          <div class="preview-audio-drop-title">Drag &amp; drop audio here</div>
+          <div class="preview-audio-drop-help">WAV, MP3, M4A or AAC · or</div>
+          <button class="hdr-btn" id="choose-preview-audio">Browse project folder…</button>
+          <div class="preview-audio-drop-help">Only a reference is stored. Your audio file is never changed or deleted.</div>
+        </div>
+      `;
+      bindAudioDropTarget(container, project.name);
+      document.getElementById('choose-preview-audio').onclick = choosePreviewAudio;
+      return;
+    }
+
+    const storedPath = typeof reference === 'string' ? reference : reference.path;
+
+    container.innerHTML = `
+      <div class="preview-audio-file" title="${esc(storedPath)}">${esc(previewFilename(typeof reference === 'string' ? { path: reference } : reference))}</div>
+      <div class="preview-audio-status">Checking file…</div>
+      <div class="preview-audio-drop-help">Drop a different audio file here, or browse to replace it.</div>
+      ${previewProgressMarkup(project.name)}
+      <div class="preview-audio-actions">
+        ${previewButtonMarkup(project.name)}
+        <button class="hdr-btn" id="replace-preview-audio">Browse…</button>
+        <button class="hdr-btn" id="remove-preview-audio">Remove</button>
+      </div>
+    `;
+    bindPreviewControls(container, project.name);
+    bindAudioDropTarget(container, project.name);
+    document.getElementById('replace-preview-audio').onclick = choosePreviewAudio;
+    document.getElementById('remove-preview-audio').onclick = removePreviewAudio;
+    validateModalPreviewAudio(project);
+  }
+
+  async function validateModalPreviewAudio(project) {
+    const reference = getMeta(project.name).preview_audio;
+    const result = await window.pywebview.api.resolve_audio_file(project.project_path, reference);
+    if (activeProject?.name !== project.name || getMeta(project.name).preview_audio !== reference) return;
+    if (result.ok) {
+      const file = document.querySelector('#modal-preview-audio .preview-audio-file');
+      if (file) {
+        file.textContent = result.name;
+        file.title = result.path;
+      }
+      setModalPreviewStatus(reference.relative ? 'Linked inside this project folder' : 'Linked from another location');
+    } else {
+      setModalPreviewStatus(result.error || 'Preview audio unavailable', true);
+    }
+  }
+
+  async function choosePreviewAudio() {
+    if (!activeProject) return;
+    const project = activeProject;
+    const result = await window.pywebview.api.browse_audio_file(project.project_path);
+    if (result.cancelled) return;
+    if (!result.ok) {
+      toast(result.error || 'Could not choose preview audio');
+      return;
+    }
+    stopAudioPreview(project.name);
+    metadata[project.name] = { ...getMeta(project.name), preview_audio: result.reference };
+    await saveMeta();
+    refreshCard(project.name);
+    renderModalPreviewAudio(project);
+    toast('Audio preview assigned');
+  }
+
+  async function removePreviewAudio() {
+    if (!activeProject) return;
+    const project = activeProject;
+    stopAudioPreview(project.name);
+    metadata[project.name] = { ...getMeta(project.name), preview_audio: null };
+    await saveMeta();
+    refreshCard(project.name);
+    renderModalPreviewAudio(project);
+    toast('Audio preview removed');
+  }
+
+  previewAudio.addEventListener('play', updatePreviewPlaybackUI);
+  previewAudio.addEventListener('pause', updatePreviewPlaybackUI);
+  previewAudio.addEventListener('timeupdate', updatePreviewPlaybackUI);
+  previewAudio.addEventListener('loadedmetadata', updatePreviewPlaybackUI);
+  previewAudio.addEventListener('ended', () => {
+    previewAudio.currentTime = 0;
+    updatePreviewPlaybackUI();
+  });
+
   // ── Open project file ──────────────────────────────────────
   function projectMainFile(project) {
     return project.main_file || project.main_flp;
@@ -3322,7 +3894,7 @@
 
   async function openProjectFile(path) {
     const r = await window.pywebview.api.open_file(path, currentDaw);
-    toast(r.ok ? 'Opening in DAW…' : 'Error: file not found');
+    toast(r.ok ? 'Opening in DAW…' : `Error: ${r.error || 'Could not open project'}`);
   }
 
   // ── Toast ──────────────────────────────────────────────────
@@ -3339,6 +3911,36 @@
   function hexToRgb(hex) {
     const n = parseInt(hex.slice(1), 16);
     return `rgb(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255})`;
+  }
+  function currentDateFormat() {
+    const saved = localStorage.getItem('date_format');
+    if (saved === 'american' || saved === 'european') return saved;
+    return navigator.language?.toLowerCase() === 'en-us' ? 'american' : 'european';
+  }
+  function setDateFormat(format) {
+    localStorage.setItem('date_format', format === 'american' ? 'american' : 'european');
+    renderCanvas();
+    if (activeProject) renderModalDates(activeProject);
+  }
+  function formatProjectDate(timestamp, includeTime = false) {
+    if (!timestamp) return 'Unavailable';
+    const date = new Date(timestamp * 1000);
+    const pad = value => String(value).padStart(2, '0');
+    const european = currentDateFormat() === 'european';
+    const datePart = european
+      ? `${pad(date.getDate())}.${pad(date.getMonth() + 1)}.${date.getFullYear()}`
+      : `${pad(date.getMonth() + 1)}/${pad(date.getDate())}/${date.getFullYear()}`;
+    if (!includeTime) return datePart;
+    const timePart = european
+      ? `${pad(date.getHours())}:${pad(date.getMinutes())}`
+      : date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+    return `${datePart}, ${timePart}`;
+  }
+  function renderModalDates(project) {
+    document.getElementById('modal-dates').innerHTML = `
+      <div><span class="project-date-label">Created</span><br>${formatProjectDate(project.created_at, true)}</div>
+      <div><span class="project-date-label">Modified</span><br>${formatProjectDate(project.modified_at || project.mtime, true)}</div>
+    `;
   }
   function esc(s) {
     return String(s)
